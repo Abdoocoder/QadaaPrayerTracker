@@ -131,6 +131,8 @@ class _ContentCard extends StatelessWidget {
                 color: AppTheme.onSurface,
                 letterSpacing: -0.2,
               ),
+              overflow: TextOverflow.ellipsis,
+              maxLines: 3,
             ),
             const SizedBox(height: AppTheme.spaceSm),
             Text(
@@ -142,6 +144,8 @@ class _ContentCard extends StatelessWidget {
                 color: AppTheme.onSurfaceVariant,
                 height: 1.6,
               ),
+              overflow: TextOverflow.ellipsis,
+              maxLines: 6,
             ),
           ],
         ),

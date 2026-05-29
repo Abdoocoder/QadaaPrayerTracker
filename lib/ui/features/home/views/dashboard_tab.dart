@@ -27,20 +27,42 @@ class _DashboardTabState extends State<DashboardTab> {
   Widget build(BuildContext context) {
     return ListenableBuilder(listenable: vm, builder: (context, _) {
       if (vm.loading) return const SafeArea(child: Center(child: CircularProgressIndicator()));
+      if (vm.error != null) {
+        return SafeArea(child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(AppTheme.spaceXxl),
+            child: Column(mainAxisSize: MainAxisSize.min, children: [
+              Icon(Icons.cloud_off_rounded, size: 48, color: AppTheme.outline.withValues(alpha: 0.5)),
+              const SizedBox(height: AppTheme.spaceLg),
+              const Text('تعذر تحميل البيانات', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: AppTheme.onSurface)),
+              const SizedBox(height: AppTheme.spaceSm),
+              Text(vm.error!, style: const TextStyle(fontSize: 13, color: AppTheme.onSurfaceVariant), textAlign: TextAlign.center),
+              const SizedBox(height: AppTheme.spaceXl),
+              FilledButton.icon(icon: const Icon(Icons.refresh, size: 18), label: const Text('إعادة المحاولة'), onPressed: vm.load),
+            ]),
+          ),
+        ));
+      }
+      final today = vm.today;
+      final agg = vm.agg;
+      final times = vm.times;
+      if (today == null || agg == null || times == null) {
+        return const SafeArea(child: Center(child: Text('لا توجد بيانات', style: TextStyle(fontSize: 16, color: AppTheme.onSurfaceVariant))));
+      }
       return SafeArea(child: SingleChildScrollView(
         padding: const EdgeInsets.all(AppTheme.spaceLg),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           const GreetingHeader(),
           const SizedBox(height: AppTheme.spaceXl),
-          HeroStatsCard(today: vm.today!, agg: vm.agg!),
+          HeroStatsCard(today: today, agg: agg),
           const SizedBox(height: AppTheme.spaceXxl),
           SectionHeader(title: 'صلوات اليوم', action: 'إدارة', onAction: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const PrayerManagementScreen()))),
           const SizedBox(height: AppTheme.spaceLg),
-          _PrayerGrid(today: vm.today!, times: vm.times!),
+          _PrayerGrid(today: today, times: times),
           const SizedBox(height: AppTheme.spaceXxl),
           SectionHeader(title: 'تذكيرات', action: 'عرض الكل'),
           const SizedBox(height: AppTheme.spaceLg),
-          ReminderList(today: vm.today!),
+          ReminderList(today: today),
           const SizedBox(height: AppTheme.spaceXxl),
         ]),
       ));
@@ -124,6 +146,7 @@ class _PrayerCard extends StatelessWidget {
                             : AppTheme.onSurface,
                         decoration: completed ? TextDecoration.lineThrough : null,
                       ),
+                      overflow: TextOverflow.ellipsis,
                     ),
                     Text(
                       time,
@@ -133,6 +156,7 @@ class _PrayerCard extends StatelessWidget {
                         fontWeight: FontWeight.w400,
                         color: AppTheme.outline,
                       ),
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ],
                 ),

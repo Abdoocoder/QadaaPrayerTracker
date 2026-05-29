@@ -29,7 +29,11 @@ class WeeklyChart extends StatelessWidget {
                       height: h.clamp(0, 110),
                       margin: const EdgeInsets.symmetric(horizontal: 4),
                       decoration: BoxDecoration(
-                        color: AppTheme.primary,
+                        gradient: LinearGradient(
+                          begin: Alignment.bottomCenter,
+                          end: Alignment.topCenter,
+                          colors: [AppTheme.primary, AppTheme.primaryFixedDim],
+                        ),
                         borderRadius: const BorderRadius.vertical(top: Radius.circular(AppTheme.radiusSm)),
                       ),
                     ),

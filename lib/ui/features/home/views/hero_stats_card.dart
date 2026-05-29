@@ -20,7 +20,7 @@ class HeroStatsCard extends StatelessWidget {
       ),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
-          colors: [AppTheme.primary, Color(0xFF003527)],
+          colors: [AppTheme.primary, Color(0xFF0F4A32)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -62,6 +62,7 @@ class HeroStatsCard extends StatelessWidget {
               color: AppTheme.onPrimary,
               letterSpacing: -0.3,
             ),
+            overflow: TextOverflow.ellipsis,
           ),
           const SizedBox(height: AppTheme.spaceMd),
           Text(

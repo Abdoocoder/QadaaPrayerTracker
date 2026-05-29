@@ -83,6 +83,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 subtitle: vm.locationDisplay,
                 onTap: () => _showLocationDialog(context),
               ),
+              _SettingsNav(
+                icon: Icons.dark_mode_rounded,
+                title: 'المظهر',
+                subtitle: _themeLabel(vm.themeMode),
+                onTap: () => _showThemeDialog(context),
+              ),
               const SizedBox(height: AppTheme.spaceXxl),
               const _GroupHeader(title: 'البيانات'),
               const SizedBox(height: AppTheme.spaceMd),
@@ -189,6 +195,37 @@ class _SettingsScreenState extends State<SettingsScreen> {
               Navigator.pop(ctx);
             },
             child: const Text('حفظ'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  String _themeLabel(ThemeMode mode) {
+    switch (mode) {
+      case ThemeMode.dark: return 'داكن';
+      case ThemeMode.system: return 'تلقائي';
+      default: return 'فاتح';
+    }
+  }
+
+  void _showThemeDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (ctx) => SimpleDialog(
+        title: const Text('المظهر', style: TextStyle(fontFamily: 'Plus Jakarta Sans')),
+        children: [
+          SimpleDialogOption(
+            onPressed: () { vm.setThemeMode(ThemeMode.light); Navigator.pop(ctx); },
+            child: Text('فاتح', style: TextStyle(fontFamily: 'Plus Jakarta Sans', fontSize: 16, fontWeight: vm.themeMode == ThemeMode.light ? FontWeight.w700 : FontWeight.w400)),
+          ),
+          SimpleDialogOption(
+            onPressed: () { vm.setThemeMode(ThemeMode.dark); Navigator.pop(ctx); },
+            child: Text('داكن', style: TextStyle(fontFamily: 'Plus Jakarta Sans', fontSize: 16, fontWeight: vm.themeMode == ThemeMode.dark ? FontWeight.w700 : FontWeight.w400)),
+          ),
+          SimpleDialogOption(
+            onPressed: () { vm.setThemeMode(ThemeMode.system); Navigator.pop(ctx); },
+            child: Text('تلقائي', style: TextStyle(fontFamily: 'Plus Jakarta Sans', fontSize: 16, fontWeight: vm.themeMode == ThemeMode.system ? FontWeight.w700 : FontWeight.w400)),
           ),
         ],
       ),
@@ -319,8 +356,8 @@ class _SettingsSwitchState extends State<_SettingsSwitch> {
           decoration: BoxDecoration(color: AppTheme.primary.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(AppTheme.radiusSm)),
           child: Icon(widget.icon, color: AppTheme.primary, size: 20),
         ),
-        title: Text(widget.title, style: const TextStyle(fontFamily: 'Plus Jakarta Sans', fontSize: 14, fontWeight: FontWeight.w600, color: AppTheme.onSurface)),
-        subtitle: Text(widget.subtitle, style: const TextStyle(fontFamily: 'Plus Jakarta Sans', fontSize: 12, fontWeight: FontWeight.w400, color: AppTheme.onSurfaceVariant)),
+        title: Text(widget.title, style: const TextStyle(fontFamily: 'Plus Jakarta Sans', fontSize: 14, fontWeight: FontWeight.w600, color: AppTheme.onSurface), overflow: TextOverflow.ellipsis),
+        subtitle: Text(widget.subtitle, style: const TextStyle(fontFamily: 'Plus Jakarta Sans', fontSize: 12, fontWeight: FontWeight.w400, color: AppTheme.onSurfaceVariant), overflow: TextOverflow.ellipsis),
         trailing: Switch(
           value: _value,
           activeTrackColor: AppTheme.primary.withValues(alpha: 0.5),
@@ -361,8 +398,8 @@ class _SettingsNav extends StatelessWidget {
           ),
           child: Icon(icon, color: isDestructive ? AppTheme.error : AppTheme.primary, size: 20),
         ),
-        title: Text(title, style: TextStyle(fontFamily: 'Plus Jakarta Sans', fontSize: 14, fontWeight: FontWeight.w600, color: isDestructive ? AppTheme.error : AppTheme.onSurface)),
-        subtitle: Text(subtitle, style: const TextStyle(fontFamily: 'Plus Jakarta Sans', fontSize: 12, fontWeight: FontWeight.w400, color: AppTheme.onSurfaceVariant)),
+        title: Text(title, style: TextStyle(fontFamily: 'Plus Jakarta Sans', fontSize: 14, fontWeight: FontWeight.w600, color: isDestructive ? AppTheme.error : AppTheme.onSurface), overflow: TextOverflow.ellipsis),
+        subtitle: Text(subtitle, style: const TextStyle(fontFamily: 'Plus Jakarta Sans', fontSize: 12, fontWeight: FontWeight.w400, color: AppTheme.onSurfaceVariant), overflow: TextOverflow.ellipsis),
         trailing: Icon(Icons.chevron_left_rounded, color: AppTheme.outline.withValues(alpha: 0.5)),
         onTap: onTap,
       ),

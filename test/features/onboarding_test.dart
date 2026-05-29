@@ -1,0 +1,61 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:qadaa_prayer_tracker/app.dart';
+import 'package:qadaa_prayer_tracker/di/locator.dart';
+
+void main() {
+  setUpAll(() async {
+    await setupDi();
+  });
+
+  group('OnboardingScreen', () {
+    testWidgets('renders first page with تخطي and التالي buttons',
+        (tester) async {
+      await tester.pumpWidget(const QadaaApp());
+      await tester.pump();
+      expect(find.text('التالي'), findsOneWidget);
+      expect(find.text('تخطي'), findsOneWidget);
+    });
+
+    testWidgets('shows page indicator dots', (tester) async {
+      await tester.pumpWidget(const QadaaApp());
+      await tester.pump();
+      // 3 dots rendered by AnimatedContainer for 3 pages
+      expect(find.byType(AnimatedContainer), findsWidgets);
+    });
+
+    testWidgets('التالي navigates to second page showing إحصائيات',
+        (tester) async {
+      await tester.pumpWidget(const QadaaApp());
+      await tester.pump();
+      await tester.tap(find.text('التالي'));
+      await tester.pumpAndSettle();
+      // Second page title contains "إحصائيات"
+      expect(find.textContaining('إحصائيات'), findsWidgets);
+    });
+
+    testWidgets('third page shows ابدأ الآن', (tester) async {
+      await tester.pumpWidget(const QadaaApp());
+      await tester.pump();
+
+      await tester.tap(find.text('التالي'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('التالي'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('ابدأ الآن'), findsOneWidget);
+    });
+
+    testWidgets('تخطي navigates to HomeScreen', (tester) async {
+      await tester.pumpWidget(const QadaaApp());
+      await tester.pump();
+      await tester.tap(find.text('تخطي'));
+      await tester.pumpAndSettle();
+      // After skip, we should see the home screen navigation bar
+      expect(find.text('الرئيسية'), findsOneWidget);
+      expect(find.text('الإحصائيات'), findsOneWidget);
+      expect(find.text('المحتوى'), findsOneWidget);
+      expect(find.text('الإعدادات'), findsOneWidget);
+    });
+  });
+}

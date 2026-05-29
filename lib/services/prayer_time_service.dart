@@ -1,9 +1,11 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../data/models/prayer_times_model.dart';
 
 class PrayerTimeService {
   static const _baseUrl = 'https://api.aladhan.com/v1/timingsByCity';
+  static const _timeout = Duration(seconds: 15);
 
   String city = 'Amman';
   String country = 'Jordan';
@@ -35,12 +37,24 @@ class PrayerTimeService {
         '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
     final url = '$_baseUrl/$dateStr?city=$city&country=$country&method=$method';
 
-    final resp = await http.get(Uri.parse(url));
-    if (resp.statusCode != 200) {
-      throw Exception('Failed to fetch prayer times: ${resp.statusCode}');
-    }
+    try {
+      final resp = await http.get(Uri.parse(url)).timeout(_timeout);
+      if (resp.statusCode != 200) {
+        throw Exception('(${resp.statusCode})');
+      }
 
-    final body = jsonDecode(resp.body) as Map<String, dynamic>;
-    return PrayerTimesModel.fromJson(body['data'] as Map<String, dynamic>, dateStr);
+      final decoded = jsonDecode(resp.body);
+      final data = (decoded as Map<String, dynamic>)['data'];
+      if (data == null) {
+        throw Exception('API response missing data field');
+      }
+      return PrayerTimesModel.fromJson(data as Map<String, dynamic>, dateStr);
+    } on FormatException {
+      throw Exception('Invalid server response');
+    } on http.ClientException {
+      throw Exception('Network error - check your connection');
+    } on TimeoutException {
+      throw Exception('Request timed out');
+    }
   }
 }

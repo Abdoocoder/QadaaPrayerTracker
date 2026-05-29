@@ -50,20 +50,17 @@ class _ToggleTileState extends State<ToggleTile> with SingleTickerProviderStateM
           padding: const EdgeInsets.symmetric(horizontal: AppTheme.spaceLg, vertical: AppTheme.spaceMd),
           child: Row(
             children: [
-              GestureDetector(
-                onTap: widget.onToggle,
-                child: AnimatedBuilder(
-                  animation: _scale,
-                  builder: (_, child) => Transform.scale(scale: 0.85 + _scale.value * 0.15, child: child),
-                  child: Container(
-                    width: 28, height: 28,
-                    decoration: BoxDecoration(
-                      color: _done ? AppTheme.primary : Colors.transparent,
-                      shape: BoxShape.circle,
-                      border: Border.all(color: _done ? AppTheme.primary : AppTheme.outline, width: 2),
-                    ),
-                    child: _done ? const Icon(Icons.check, size: 16, color: AppTheme.onPrimary) : null,
+              AnimatedBuilder(
+                animation: _scale,
+                builder: (_, child) => Transform.scale(scale: 0.85 + _scale.value * 0.15, child: child),
+                child: Container(
+                  width: 28, height: 28,
+                  decoration: BoxDecoration(
+                    color: _done ? AppTheme.primary : Colors.transparent,
+                    shape: BoxShape.circle,
+                    border: Border.all(color: _done ? AppTheme.primary : AppTheme.outline, width: 2),
                   ),
+                  child: _done ? const Icon(Icons.check, size: 16, color: AppTheme.onPrimary) : null,
                 ),
               ),
               const SizedBox(width: AppTheme.spaceLg),

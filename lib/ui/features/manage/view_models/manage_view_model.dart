@@ -13,6 +13,7 @@ class ManageViewModel extends ChangeNotifier {
   DayLog? dayLog;
   PrayerTimes? times;
   bool loading = true;
+  String? error;
   final dates = List.generate(7, (i) => DateTime.now().subtract(Duration(days: i)));
 
   ManageViewModel({required PrayerLogRepository logRepo, required PrayerTimeRepository timeRepo})
@@ -20,18 +21,30 @@ class ManageViewModel extends ChangeNotifier {
 
   Future<void> loadDay() async {
     loading = true;
+    error = null;
     notifyListeners();
-    final date = dates[selectedDay];
-    await _logRepo.ensureTodayLogs();
-    final results = await Future.wait([_logRepo.getDayLog(date), _timeRepo.getTimes(date)]);
-    dayLog = results[0] as DayLog;
-    times = results[1] as PrayerTimes;
-    loading = false;
-    notifyListeners();
+    try {
+      final date = dates[selectedDay];
+      await _logRepo.ensureTodayLogs();
+      final results = await Future.wait([_logRepo.getDayLog(date), _timeRepo.getTimes(date)]);
+      dayLog = results[0] as DayLog;
+      times = results[1] as PrayerTimes;
+    } catch (e) {
+      error = e.toString();
+    } finally {
+      loading = false;
+      notifyListeners();
+    }
   }
 
   Future<void> toggle(PrayerName prayer) async {
-    await _logRepo.togglePrayer(dates[selectedDay], prayer);
+    try {
+      await _logRepo.togglePrayer(dates[selectedDay], prayer);
+    } catch (e) {
+      error = e.toString();
+      notifyListeners();
+      return;
+    }
     await loadDay();
   }
 

@@ -12,23 +12,30 @@ class HomeViewModel extends ChangeNotifier {
   PrayerTimes? times;
   Map<String, int>? agg;
   bool loading = true;
+  String? error;
 
   HomeViewModel({required PrayerLogRepository logRepo, required PrayerTimeRepository timeRepo})
       : _logRepo = logRepo, _timeRepo = timeRepo;
 
   Future<void> load() async {
     loading = true;
+    error = null;
     notifyListeners();
-    await _logRepo.ensureTodayLogs();
-    final results = await Future.wait([
-      _logRepo.getDayLog(DateTime.now()),
-      _logRepo.getAggregates(),
-      _timeRepo.getTodayTimes(),
-    ]);
-    today = results[0] as DayLog;
-    agg = results[1] as Map<String, int>;
-    times = results[2] as PrayerTimes;
-    loading = false;
-    notifyListeners();
+    try {
+      await _logRepo.ensureTodayLogs();
+      final results = await Future.wait([
+        _logRepo.getDayLog(DateTime.now()),
+        _logRepo.getAggregates(),
+        _timeRepo.getTodayTimes(),
+      ]);
+      today = results[0] as DayLog;
+      agg = results[1] as Map<String, int>;
+      times = results[2] as PrayerTimes;
+    } catch (e) {
+      error = e.toString();
+    } finally {
+      loading = false;
+      notifyListeners();
+    }
   }
 }

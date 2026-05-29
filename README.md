@@ -7,7 +7,12 @@
     <a href="#screenshots">Screenshots</a> •
     <a href="#getting-started">Getting Started</a> •
     <a href="#architecture">Architecture</a> •
+    <a href="#testing">Testing</a> •
     <a href="#tech-stack">Tech Stack</a>
+  </p>
+  <p align="center">
+    <code>flutter analyze</code> — 0 issues &nbsp;&nbsp;·&nbsp;&nbsp;
+    <code>flutter test</code> — 163/163 passing
   </p>
 </div>
 
@@ -81,13 +86,13 @@ lib/
 ├── app.dart                  # App entry point with locale management
 ├── main.dart                 # App bootstrap with DI initialization
 ├── di/                       # Dependency injection
-│   ├── locator.dart          # GetIt service locator setup
+│   ├── locator.dart          # GetIt service locator (idempotent setup)
 │   └── locale_notifier.dart  # Locale change notifier
 ├── data/                     # Data layer
 │   ├── models/               # Data models (fromJson/toMap)
 │   └── repositories/         # Repository implementations
 ├── domain/                   # Domain layer
-│   └── models/               # Pure domain models
+│   └── models/               # Pure domain models (PrayerName, DayLog, PrayerTimes)
 ├── services/                 # Services (database, API, notifications)
 │   ├── database_service.dart # SQLite database
 │   ├── prayer_time_service.dart # Aladhan.com API client
@@ -95,14 +100,37 @@ lib/
 ├── theme/                    # App theme (colors, spacing, typography)
 ├── l10n/                     # Localization (AR/EN)
 └── ui/
-    ├── core/widgets/         # Shared widgets
+    ├── core/widgets/         # Shared widgets (StatCard, SectionHeader, etc.)
     └── features/             # Feature-based modules
-        ├── onboarding/
-        ├── home/             # Dashboard tab
-        ├── manage/           # Prayer management screen
-        ├── stats/            # Statistics tabs
+        ├── onboarding/       # Welcome screens
+        ├── home/             # Dashboard with greeting, hero card, prayer grid, reminders
+        ├── manage/           # 7-day prayer management with toggle tiles
+        ├── stats/            # Statistics with charts and distribution
         ├── content/          # Islamic content screen
-        └── settings/         # Settings screen
+        └── settings/         # Preferences, export, data reset
+
+test/
+├── data/models/              # Data model unit tests
+├── domain/models/            # Domain model unit tests
+├── features/                 # Feature-based test modules
+│   ├── home/
+│   │   ├── view_models/      # HomeViewModel tests
+│   │   ├── dashboard_tab_test.dart
+│   │   └── home_screen_test.dart
+│   ├── manage/
+│   │   ├── view_models/      # ManageViewModel tests
+│   │   └── manage_screen_test.dart
+│   ├── stats/
+│   │   ├── view_models/      # StatsViewModel tests
+│   │   └── stats_screen_test.dart
+│   ├── settings/
+│   │   ├── view_models/      # SettingsViewModel tests
+│   │   └── settings_screen_test.dart
+│   └── onboarding_test.dart
+├── widgets/                  # Generic widget tests
+├── helpers/
+│   └── mocks.dart            # Shared mock implementations
+└── widget_test.dart
 ```
 
 ### Data Flow
@@ -118,7 +146,62 @@ UI (View) → ViewModel (ChangeNotifier) → Repository → Service (DB / API)
 - **Repositories** transform data models to domain models
 - **Services** handle raw I/O (SQLite, HTTP, notifications)
 
+### State Management
+
+Each ViewModel extends `ChangeNotifier` and is registered as a factory in GetIt. Screens retrieve their ViewModel via `sl<ViewModel>()` and rebuild through `ListenableBuilder`. The `LocaleNotifier` propagates language changes globally.
+
+## Testing
+
+The project maintains **163 passing tests** with **0 analysis issues**.
+
+```bash
+# Run all tests
+flutter test
+
+# Run a specific test file
+flutter test test/features/home/dashboard_tab_test.dart
+
+# Run by name
+flutter test --name "SettingsViewModel"
+
+# Static analysis
+flutter analyze
+```
+
+### Test Coverage
+
+| Test File | Tests | Scope |
+|-----------|-------|-------|
+| `data/models/prayer_log_model_test.dart` | 12 | `toMap`, `fromMap`, `dateToStr`, `strToDate` |
+| `data/models/prayer_times_model_test.dart` | 9 | `fromJson`, `toMap`, `fromMap`, `toDomain` |
+| `domain/models/prayer_name_test.dart` | 13 | Enum values, `arName`, `rakah`, `allPrayers` |
+| `domain/models/day_log_test.dart` | 13 | Constructor, `total`, `completed`, `percentage` |
+| `domain/models/prayer_times_test.dart` | 8 | Fields, `forPrayer`, const constructor |
+| `features/home/view_models/home_view_model_test.dart` | 8 | Load, error, listener notifications |
+| `features/stats/view_models/stats_view_model_test.dart` | 6 | Aggregates, distribution, error handling |
+| `features/manage/view_models/manage_view_model_test.dart` | 8 | `loadDay`, `selectDay`, `toggle` |
+| `features/settings/view_models/settings_view_model_test.dart` | 16 | Settings CRUD, export, reset, error rollback |
+| `features/onboarding_test.dart` | 5 | Page navigation, skip, CTA |
+| `features/home/home_screen_test.dart` | 4 | Tab navigation between all 4 tabs |
+| `features/home/dashboard_tab_test.dart` | 7 | Greeting, hero stats, prayer grid, reminders, error, null states |
+| `features/stats/stats_screen_test.dart` | 8 | Stat cards, distribution, weekly chart, error, null states |
+| `features/settings/settings_screen_test.dart` | 8 | Switches, nav items, dialogs (language, export) |
+| `features/manage/manage_screen_test.dart` | 5 | Title, prayer toggles, save, date strip |
+| `widgets/core_widgets_test.dart` | 14 | `StatCard`, `SectionHeader`, `GreetingHeader`, `ToggleTile`, `DateStrip` |
+| `widgets/data_display_test.dart` | 11 | `HeroStatsCard`, `WeeklyChart`, `ReminderList` |
+| `widgets/content_screen_test.dart` | 3 | Title, cards, content presence |
+
+### Testing Approach
+
+- **Unit tests** for domain models and ViewModels with manual mock classes (no mockito dependency)
+- **Widget tests** for screens and components using `testWidgets` and `pump`
+- **Shared mocks** in `test/helpers/mocks.dart` provide reusable `MockLogRepo`, `MockTimeRepo`, `MockDatabaseService`, `MockNotificationService`, `MockPrayerTimeService`, and `MockLocaleNotifier` with failure flags and callbacks
+- **Idempotent DI** — `setupDi()` checks `isRegistered` before registering, allowing safe re-entry across test files
+- **`sl.allowReassignment = true`** in `setUp` to override ViewModel factory registrations with mock instances
+
 ## Tech Stack
+
+### Dependencies
 
 | Package | Purpose |
 |---------|---------|
@@ -132,6 +215,13 @@ UI (View) → ViewModel (ChangeNotifier) → Repository → Service (DB / API)
 | `path_provider` | File system paths |
 | `flutter_lints` | Linting rules |
 
+### Dev Dependencies
+
+| Package | Purpose |
+|---------|---------|
+| `flutter_test` | Widget and unit testing framework |
+| `sqflite_common_ffi` | In-memory SQLite for tests (Linux/macOS/Windows) |
+
 ## Localization
 
 Switch between Arabic and English in Settings. The app defaults to Arabic with RTL layout support.
@@ -139,6 +229,10 @@ Switch between Arabic and English in Settings. The app defaults to Arabic with R
 ## Contributing
 
 Contributions are welcome. Please open an issue first to discuss what you'd like to change.
+
+1. Ensure `flutter analyze` passes with 0 issues
+2. Ensure `flutter test` passes (all 163+ tests)
+3. Update tests for any new features or changes
 
 ## License
 

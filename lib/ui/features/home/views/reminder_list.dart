@@ -59,15 +59,17 @@ class ReminderList extends StatelessWidget {
                   fontWeight: FontWeight.w600,
                   color: AppTheme.onSurface,
                 ),
+                overflow: TextOverflow.ellipsis,
               ),
-              subtitle: const Text(
+              subtitle: Text(
                 'لم تقض هذه الصلاة بعد',
-                style: TextStyle(
+                style: const TextStyle(
                   fontFamily: 'Plus Jakarta Sans',
                   fontSize: 12,
                   fontWeight: FontWeight.w400,
                   color: AppTheme.onSurfaceVariant,
                 ),
+                overflow: TextOverflow.ellipsis,
               ),
               trailing: TextButton(
                 onPressed: () {

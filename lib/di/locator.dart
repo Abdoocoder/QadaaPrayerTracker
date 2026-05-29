@@ -9,10 +9,12 @@ import '../ui/features/manage/view_models/manage_view_model.dart';
 import '../ui/features/stats/view_models/stats_view_model.dart';
 import '../ui/features/settings/view_models/settings_view_model.dart';
 import 'locale_notifier.dart';
+import 'theme_notifier.dart';
 
 final sl = GetIt.instance;
 
 Future<void> setupDi() async {
+  if (sl.isRegistered<DatabaseService>()) return;
   sl.registerSingleton<DatabaseService>(DatabaseService());
   sl.registerLazySingleton<PrayerTimeService>(() => PrayerTimeService());
   sl.registerLazySingleton<NotificationService>(() => NotificationService());
@@ -21,9 +23,13 @@ Future<void> setupDi() async {
   sl.registerLazySingleton<PrayerTimeRepository>(() => PrayerTimeRepository(db: sl(), api: sl()));
 
   sl.registerLazySingleton<LocaleNotifier>(() => LocaleNotifier());
+  sl.registerLazySingleton<ThemeNotifier>(() => ThemeNotifier());
 
   sl.registerFactory<HomeViewModel>(() => HomeViewModel(logRepo: sl(), timeRepo: sl()));
   sl.registerFactory<ManageViewModel>(() => ManageViewModel(logRepo: sl(), timeRepo: sl()));
   sl.registerFactory<StatsViewModel>(() => StatsViewModel(logRepo: sl()));
-  sl.registerFactory<SettingsViewModel>(() => SettingsViewModel(logRepo: sl(), notifService: sl(), db: sl(), prayerTimeService: sl(), localeNotifier: sl()));
+  sl.registerLazySingleton<SettingsViewModel>(() => SettingsViewModel(
+    logRepo: sl(), notifService: sl(), db: sl(),
+    prayerTimeService: sl(), localeNotifier: sl(), themeNotifier: sl(),
+  ));
 }
