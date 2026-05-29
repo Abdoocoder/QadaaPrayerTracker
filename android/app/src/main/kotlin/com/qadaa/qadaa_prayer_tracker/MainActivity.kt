@@ -1,0 +1,5 @@
+package com.qadaa.qadaa_prayer_tracker
+
+import io.flutter.embedding.android.FlutterActivity
+
+class MainActivity : FlutterActivity()
