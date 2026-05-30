@@ -4,6 +4,7 @@ import '../data/repositories/prayer_time_repository.dart';
 import '../services/database_service.dart';
 import '../services/prayer_time_service.dart';
 import '../services/notification_service.dart';
+import '../services/qadaa_service.dart';
 import '../services/supabase_service.dart';
 import '../services/supabase_sync_service.dart';
 import '../ui/features/home/view_models/home_view_model.dart';
@@ -26,6 +27,8 @@ Future<void> setupDi() async {
   sl.registerLazySingleton<PrayerTimeService>(() => PrayerTimeService(supabase: sl()));
   sl.registerLazySingleton<NotificationService>(() => NotificationService());
 
+  sl.registerLazySingleton<QadaaService>(() => QadaaService(db: sl()));
+
   sl.registerLazySingleton<PrayerLogRepository>(() => PrayerLogRepository(db: sl()));
   sl.registerLazySingleton<PrayerTimeRepository>(() => PrayerTimeRepository(db: sl(), api: sl()));
 
@@ -41,6 +44,8 @@ Future<void> setupDi() async {
   sl.registerFactory<StatsViewModel>(() => StatsViewModel(logRepo: sl()));
   sl.registerLazySingleton<SettingsViewModel>(() => SettingsViewModel(
     logRepo: sl(), notifService: sl(), db: sl(),
-    prayerTimeService: sl(), localeNotifier: sl(), themeNotifier: sl(),
+    prayerTimeService: sl(), qadaaService: sl(), supabase: sl(),
+    syncService: sl(),
+    localeNotifier: sl(), themeNotifier: sl(),
   ));
 }

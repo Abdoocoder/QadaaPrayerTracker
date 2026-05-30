@@ -12,7 +12,7 @@
   </p>
   <p align="center">
     <code>flutter analyze</code> — 0 issues &nbsp;&nbsp;·&nbsp;&nbsp;
-    <code>flutter test</code> — 189/189 passing
+    <code>flutter test</code> — 210/210 passing
   </p>
 </div>
 
@@ -32,6 +32,8 @@ Qadaa Prayer Tracker helps Muslims track, manage, and make up missed prayers (ص
 - **Dynamic Location** — Configure city and country for accurate prayer time calculation
 - **Calculation Methods** — 22 supported methods (Muslim World League, Umm Al-Qura, ISNA, etc.)
 - **Bilingual** — Full Arabic and English localization, switchable in settings
+- **Cloud Sync** — Sign in with email/password to sync prayer logs and settings across devices via Supabase
+- **Account Management** — Sign-in, sign-up (with email confirmation), and sign-out from the Settings screen
 - **Data Export** — Export prayer logs as CSV or JSON
 - **Dark Theme Ready** — Material Design 3 color system, designed for future dark mode
 
@@ -71,8 +73,12 @@ supabase db push
 # Deploy the prayer times edge function
 supabase functions deploy fetch-prayer-times
 
-# Run the app
+# Run the app (defaults work for local development)
 flutter run
+
+# Run with custom Supabase credentials (overrides defaults)
+flutter run --dart-define=SUPABASE_URL=https://your-project.supabase.co \
+            --dart-define=SUPABASE_ANON_KEY=your-anon-key
 ```
 
 ### Build
@@ -161,6 +167,7 @@ UI (View) → ViewModel (ChangeNotifier) → Repository → Service (DB / API / 
 - **ViewModels** expose immutable state and call repository methods
 - **Repositories** transform data models to domain models
 - **Services** handle raw I/O (SQLite, HTTP, Supabase)
+- **Authentication** — `SupabaseService` manages sign-in/sign-up/sign-out via Supabase Auth; `SettingsViewModel` exposes auth state and triggers `syncAll()` after login
 - **Cloud Sync** — `SupabaseSyncService` synchronizes local SQLite data with Supabase when signed in, using a progress stream for UI updates
 
 ### State Management
@@ -169,7 +176,7 @@ Each ViewModel extends `ChangeNotifier` and is registered as a factory in GetIt.
 
 ## Testing
 
-The project maintains **189 passing tests** with **0 analysis issues**.
+The project maintains **210 passing tests** with **0 analysis issues**.
 
 ```bash
 # Run all tests
@@ -197,21 +204,22 @@ flutter analyze
 | `features/home/view_models/home_view_model_test.dart` | 8 | Load, error, listener notifications |
 | `features/stats/view_models/stats_view_model_test.dart` | 6 | Aggregates, distribution, error handling |
 | `features/manage/view_models/manage_view_model_test.dart` | 8 | `loadDay`, `selectDay`, `toggle` |
-| `features/settings/view_models/settings_view_model_test.dart` | 16 | Settings CRUD, export, reset, error rollback |
+| `features/settings/view_models/settings_view_model_test.dart` | 26 | Settings CRUD, export, reset, error rollback, auth (sign-in/sign-up/sign-out/error) |
 | `features/onboarding_test.dart` | 5 | Page navigation, skip, CTA |
 | `features/home/home_screen_test.dart` | 4 | Tab navigation between all 4 tabs |
 | `features/home/dashboard_tab_test.dart` | 7 | Greeting, hero stats, prayer grid, reminders, error, null states |
 | `features/stats/stats_screen_test.dart` | 8 | Stat cards, distribution, weekly chart, error, null states |
-| `features/settings/settings_screen_test.dart` | 8 | Switches, nav items, dialogs (language, export) |
+| `features/settings/settings_screen_test.dart` | 14 | Switches, nav items, dialogs (language, export), auth UI (account section, sign-in/sign-up dialog, sign-out) |
 | `features/manage/manage_screen_test.dart` | 5 | Title, prayer toggles, save, date strip |
 | `widgets/core_widgets_test.dart` | 14 | `StatCard`, `SectionHeader`, `GreetingHeader`, `ToggleTile`, `DateStrip` |
 | `widgets/data_display_test.dart` | 11 | `HeroStatsCard`, `WeeklyChart`, `ReminderList` |
 | `widgets/content_screen_test.dart` | 3 | Title, cards, content presence |
 | `services/supabase_sync_service_test.dart` | 11 | Sync, upload, download, concurrency, progress stream, error handling |
+| **Total** | **210** | |
 
 ### Environment
 
-- Supabase credentials are loaded from `.env` (see `.env.example` for the template)
+- Supabase credentials are loaded from `--dart-define` (or fall back to defaults in source for local development); see `.env.example` for the template
 - The app runs in **local-only mode** if Supabase is not configured — no crash on missing credentials
 - **Test isolation** — `DatabaseService` accepts a `dbName` parameter (`'qadaa.db'` default) to avoid file-system conflicts during parallel test execution
 - **`testSetupDi()`** — a single helper in `test/helpers/test_setup.dart` that wraps `SharedPreferences.setMockInitialValues({})` + `setupDi()`, keeping test setup DRY
@@ -227,6 +235,15 @@ flutter analyze
 ## Backend (Supabase)
 
 The app uses **Supabase** for cloud sync, authentication, and the prayer times edge function.
+
+### Authentication
+
+The app uses **Supabase Auth** with email/password. Users can sign up, sign in, sign out, and reset their password — all from the Settings screen. Cloud sync triggers automatically after sign-in.
+
+- **State management** — `onAuthStateChange` listener in `SupabaseService` notifies registered listeners on session changes; `SettingsViewModel` uses `addAuthListener` to keep the UI in sync
+- **Error handling** — `SupabaseService.friendlyError()` maps `AuthException` codes to user-friendly Arabic messages (invalid credentials, already registered, network issues, rate limiting)
+- **Navigation** — After sign-in, the app navigates to the Home screen with a fade transition; sign-up shows a confirmation SnackBar (email verification)
+- **Secrets** — Supabase URL and anon key use `String.fromEnvironment()` with defaults; override via `--dart-define`
 
 ### Schema: `qadaa`
 
@@ -283,7 +300,7 @@ Switch between Arabic and English in Settings. The app defaults to Arabic with R
 Contributions are welcome. Please open an issue first to discuss what you'd like to change.
 
 1. Ensure `flutter analyze` passes with 0 issues
-2. Ensure `flutter test` passes (all 189+ tests)
+2. Ensure `flutter test` passes (all 210+ tests)
 3. Update tests for any new features or changes
 4. For backend changes, update the migration and re-deploy the edge function
 

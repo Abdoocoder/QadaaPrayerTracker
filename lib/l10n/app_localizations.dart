@@ -673,6 +673,252 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'It\'\'s time to make up the {prayerName} prayer'**
   String notifBody(String prayerName);
+
+  /// Qadaa tracker screen title
+  ///
+  /// In en, this message translates to:
+  /// **'Qadaa Progress'**
+  String get qadaaTrackerTitle;
+
+  /// Current prayer time banner
+  ///
+  /// In en, this message translates to:
+  /// **'Now: {prayerName} time'**
+  String qadaaTodayBanner(String prayerName);
+
+  /// Log dialog hint
+  ///
+  /// In en, this message translates to:
+  /// **'Enter count'**
+  String get qadaaEnterCount;
+
+  /// Log dialog validation error
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid number greater than zero'**
+  String get qadaaEnterValidNumber;
+
+  /// Log action button
+  ///
+  /// In en, this message translates to:
+  /// **'Log'**
+  String get qadaaLogButton;
+
+  /// Log list section title
+  ///
+  /// In en, this message translates to:
+  /// **'Recent Activity'**
+  String get qadaaRecentActivity;
+
+  /// Prayer fully completed
+  ///
+  /// In en, this message translates to:
+  /// **'All made up!'**
+  String get qadaaFullyComplete;
+
+  /// Footer total
+  ///
+  /// In en, this message translates to:
+  /// **'Total made up: {count}'**
+  String qadaaTotalMadeUp(int count);
+
+  /// Plural log entry
+  ///
+  /// In en, this message translates to:
+  /// **'{prayerName} made up {count} rakah'**
+  String qadaaPrayerMadeUp(String prayerName, int count);
+
+  /// Plural log entry
+  ///
+  /// In en, this message translates to:
+  /// **'{prayerName} made up {count} rakahs'**
+  String qadaaPrayerMadeUp_plural(String prayerName, int count);
+
+  /// Settings years label
+  ///
+  /// In en, this message translates to:
+  /// **'Missed Years'**
+  String get qadaaYearsLabel;
+
+  /// Settings years subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Years of missed prayers'**
+  String get qadaaYearsSubtitle;
+
+  /// Years edit dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Missed Years'**
+  String get qadaaYearsDialogTitle;
+
+  /// Years edit hint
+  ///
+  /// In en, this message translates to:
+  /// **'Enter number of years'**
+  String get qadaaYearsDialogHint;
+
+  /// Years dialog save
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get qadaaYearsDialogSave;
+
+  /// Years change warning
+  ///
+  /// In en, this message translates to:
+  /// **'Changing years will reset your current progress.'**
+  String get qadaaYearsResetWarning;
+
+  /// Settings group header
+  ///
+  /// In en, this message translates to:
+  /// **'ACCOUNT'**
+  String get settingsGroupAccount;
+
+  /// Setting nav
+  ///
+  /// In en, this message translates to:
+  /// **'Sign In'**
+  String get settingSignIn;
+
+  /// Setting subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in to sync your data'**
+  String get settingSignInSub;
+
+  /// Setting nav
+  ///
+  /// In en, this message translates to:
+  /// **'Sign Up'**
+  String get settingSignUp;
+
+  /// Setting nav
+  ///
+  /// In en, this message translates to:
+  /// **'Sign Out'**
+  String get settingSignOut;
+
+  /// Setting subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Sign out of your account'**
+  String get settingSignOutSub;
+
+  /// Signed in status
+  ///
+  /// In en, this message translates to:
+  /// **'Signed in as {email}'**
+  String settingSignedInAs(String email);
+
+  /// Auth dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Sign In'**
+  String get authDialogTitle;
+
+  /// Auth dialog email field
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get authDialogEmail;
+
+  /// Auth dialog password field
+  ///
+  /// In en, this message translates to:
+  /// **'Password'**
+  String get authDialogPassword;
+
+  /// Auth dialog sign in button
+  ///
+  /// In en, this message translates to:
+  /// **'Sign In'**
+  String get authDialogSignIn;
+
+  /// Auth dialog sign up button
+  ///
+  /// In en, this message translates to:
+  /// **'Sign Up'**
+  String get authDialogSignUp;
+
+  /// Auth dialog cancel button
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get authDialogCancel;
+
+  /// Auth error snackbar
+  ///
+  /// In en, this message translates to:
+  /// **'Authentication error: {error}'**
+  String authError(String error);
+
+  /// Sign out success snackbar
+  ///
+  /// In en, this message translates to:
+  /// **'Signed out successfully'**
+  String get authSignedOut;
+
+  /// Sign in success snackbar
+  ///
+  /// In en, this message translates to:
+  /// **'Signed in successfully'**
+  String get authSignedIn;
+
+  /// Sign up success snackbar
+  ///
+  /// In en, this message translates to:
+  /// **'Verification link sent to your email'**
+  String get authSignedUp;
+
+  /// Sign in error
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid email or password'**
+  String get authSignInErrorInvalidCredentials;
+
+  /// Sign up error
+  ///
+  /// In en, this message translates to:
+  /// **'This email is already registered'**
+  String get authSignUpErrorAlreadyRegistered;
+
+  /// Network error message
+  ///
+  /// In en, this message translates to:
+  /// **'Network error, please check your connection and try again'**
+  String get authErrorNetwork;
+
+  /// Rate limit error message
+  ///
+  /// In en, this message translates to:
+  /// **'Too many requests, please try again later'**
+  String get authErrorRateLimit;
+
+  /// Onboarding years question
+  ///
+  /// In en, this message translates to:
+  /// **'How many years of prayers did you miss?'**
+  String get onboardingYearsTitle;
+
+  /// Onboarding years subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'This will help us calculate your progress'**
+  String get onboardingYearsSub;
+
+  /// Onboarding years input hint
+  ///
+  /// In en, this message translates to:
+  /// **'Enter number of years'**
+  String get onboardingYearsHint;
+
+  /// Onboarding years save button
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get onboardingYearsSave;
 }
 
 class _AppLocalizationsDelegate

@@ -38,7 +38,7 @@ class WeeklyChart extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: AppTheme.spaceSm),
-                    Text(days[i], style: const TextStyle(fontFamily: 'Plus Jakarta Sans', fontSize: 11, fontWeight: FontWeight.w500, color: AppTheme.onSurfaceVariant)),
+                    Text(days[i], style: const TextStyle(fontFamily: 'Plus Jakarta Sans', fontSize: 11, fontWeight: FontWeight.w500, color: AppTheme.onSurfaceVariant), overflow: TextOverflow.ellipsis),
                   ],
                 ),
               );

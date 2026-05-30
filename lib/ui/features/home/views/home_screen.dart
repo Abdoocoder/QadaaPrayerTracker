@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import '../../../../theme/app_theme.dart';
+import '../../qadaa/views/qadaa_tracker_screen.dart';
 import '../../stats/views/stats_screen.dart';
 import '../../content/views/content_screen.dart';
 import '../../settings/views/settings_screen.dart';
-import 'dashboard_tab.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -13,7 +13,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _tab = 0;
-  final _pages = const [DashboardTab(), StatsScreen(), ContentScreen(), SettingsScreen()];
+  final _pages = const [QadaaTrackerScreen(), StatsScreen(), ContentScreen(), SettingsScreen()];
 
   @override
   Widget build(BuildContext context) {

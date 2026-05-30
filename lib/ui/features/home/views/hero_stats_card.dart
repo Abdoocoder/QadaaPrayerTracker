@@ -73,6 +73,7 @@ class HeroStatsCard extends StatelessWidget {
               fontWeight: FontWeight.w400,
               color: AppTheme.onPrimary.withValues(alpha: 0.7),
             ),
+            overflow: TextOverflow.ellipsis,
           ),
           const SizedBox(height: AppTheme.spaceLg),
           Row(
@@ -121,6 +122,7 @@ class _HeroStat extends StatelessWidget {
             color: color,
             letterSpacing: -0.5,
           ),
+          overflow: TextOverflow.ellipsis,
         ),
         const SizedBox(height: 2),
         Text(
@@ -131,6 +133,7 @@ class _HeroStat extends StatelessWidget {
             fontWeight: FontWeight.w500,
             color: color.withValues(alpha: 0.75),
           ),
+          overflow: TextOverflow.ellipsis,
         ),
       ],
     );

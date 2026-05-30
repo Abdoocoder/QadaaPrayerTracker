@@ -13,8 +13,8 @@ class ContentScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Padding(
-              padding: EdgeInsets.only(
-                left: AppTheme.spaceSm, right: AppTheme.spaceSm,
+              padding: EdgeInsetsDirectional.only(
+                start: AppTheme.spaceSm, end: AppTheme.spaceSm,
                 top: AppTheme.spaceMd,
               ),
               child: Text(
@@ -26,6 +26,7 @@ class ContentScreen extends StatelessWidget {
                   color: AppTheme.onSurface,
                   letterSpacing: -0.3,
                 ),
+                overflow: TextOverflow.ellipsis,
               ),
             ),
             const SizedBox(height: AppTheme.spaceSm),
@@ -39,6 +40,7 @@ class ContentScreen extends StatelessWidget {
                   fontWeight: FontWeight.w400,
                   color: AppTheme.onSurfaceVariant.withValues(alpha: 0.7),
                 ),
+                overflow: TextOverflow.ellipsis,
               ),
             ),
             const SizedBox(height: AppTheme.spaceXl),
@@ -119,6 +121,7 @@ class _ContentCard extends StatelessWidget {
                   color: AppTheme.primary,
                   letterSpacing: 0.3,
                 ),
+                overflow: TextOverflow.ellipsis,
               ),
             ),
             const SizedBox(height: AppTheme.spaceMd),

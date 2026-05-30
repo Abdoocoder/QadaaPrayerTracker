@@ -13,6 +13,9 @@ void main() {
   late MockNotificationService notifService;
   late MockDatabaseService db;
   late MockPrayerTimeService prayerTimeService;
+  late MockQadaaService qadaaService;
+  late MockSupabaseService supabase;
+  late MockSupabaseSyncService syncService;
   late MockLocaleNotifier localeNotifier;
   late MockThemeNotifier themeNotifier;
 
@@ -21,6 +24,9 @@ void main() {
     notifService = MockNotificationService();
     db = MockDatabaseService();
     prayerTimeService = MockPrayerTimeService();
+    qadaaService = MockQadaaService();
+    supabase = MockSupabaseService();
+    syncService = MockSupabaseSyncService();
     localeNotifier = MockLocaleNotifier();
     themeNotifier = MockThemeNotifier();
     vm = SettingsViewModel(
@@ -28,6 +34,9 @@ void main() {
       notifService: notifService,
       db: db,
       prayerTimeService: prayerTimeService,
+      qadaaService: qadaaService,
+      supabase: supabase,
+      syncService: syncService,
       localeNotifier: localeNotifier,
       themeNotifier: themeNotifier,
     );
@@ -91,6 +100,9 @@ void main() {
         notifService: failingNotif,
         db: db,
         prayerTimeService: prayerTimeService,
+        qadaaService: qadaaService,
+        supabase: supabase,
+        syncService: syncService,
         localeNotifier: localeNotifier,
         themeNotifier: themeNotifier,
       );
@@ -140,6 +152,19 @@ void main() {
       expect(vm.locationDisplay, 'Mecca، Saudi Arabia');
     });
 
+    test('qadaaYears returns current years from service', () async {
+      await vm.loadSettings();
+      expect(vm.qadaaYears, 0);
+      await qadaaService.resetFromYears(5);
+      expect(vm.qadaaYears, 5);
+    });
+
+    test('setQadaaYears updates years via service', () async {
+      await vm.loadSettings();
+      await vm.setQadaaYears(3);
+      expect(vm.qadaaYears, 3);
+    });
+
     test('exportCsv returns CSV header', () async {
       await vm.loadSettings();
       final csv = await vm.exportCsv();
@@ -170,6 +195,9 @@ void main() {
         notifService: notifService,
         db: failingDb,
         prayerTimeService: prayerTimeService,
+        qadaaService: qadaaService,
+        supabase: supabase,
+        syncService: syncService,
         localeNotifier: localeNotifier,
         themeNotifier: themeNotifier,
       );

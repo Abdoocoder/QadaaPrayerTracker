@@ -306,4 +306,143 @@ class AppLocalizationsEn extends AppLocalizations {
   String notifBody(String prayerName) {
     return 'It\'s time to make up the $prayerName prayer';
   }
+
+  @override
+  String get qadaaTrackerTitle => 'Qadaa Progress';
+
+  @override
+  String qadaaTodayBanner(String prayerName) {
+    return 'Now: $prayerName time';
+  }
+
+  @override
+  String get qadaaEnterCount => 'Enter count';
+
+  @override
+  String get qadaaEnterValidNumber =>
+      'Please enter a valid number greater than zero';
+
+  @override
+  String get qadaaLogButton => 'Log';
+
+  @override
+  String get qadaaRecentActivity => 'Recent Activity';
+
+  @override
+  String get qadaaFullyComplete => 'All made up!';
+
+  @override
+  String qadaaTotalMadeUp(int count) {
+    return 'Total made up: $count';
+  }
+
+  @override
+  String qadaaPrayerMadeUp(String prayerName, int count) {
+    return '$prayerName made up $count rakah';
+  }
+
+  @override
+  String qadaaPrayerMadeUp_plural(String prayerName, int count) {
+    return '$prayerName made up $count rakahs';
+  }
+
+  @override
+  String get qadaaYearsLabel => 'Missed Years';
+
+  @override
+  String get qadaaYearsSubtitle => 'Years of missed prayers';
+
+  @override
+  String get qadaaYearsDialogTitle => 'Missed Years';
+
+  @override
+  String get qadaaYearsDialogHint => 'Enter number of years';
+
+  @override
+  String get qadaaYearsDialogSave => 'Save';
+
+  @override
+  String get qadaaYearsResetWarning =>
+      'Changing years will reset your current progress.';
+
+  @override
+  String get settingsGroupAccount => 'ACCOUNT';
+
+  @override
+  String get settingSignIn => 'Sign In';
+
+  @override
+  String get settingSignInSub => 'Sign in to sync your data';
+
+  @override
+  String get settingSignUp => 'Sign Up';
+
+  @override
+  String get settingSignOut => 'Sign Out';
+
+  @override
+  String get settingSignOutSub => 'Sign out of your account';
+
+  @override
+  String settingSignedInAs(String email) {
+    return 'Signed in as $email';
+  }
+
+  @override
+  String get authDialogTitle => 'Sign In';
+
+  @override
+  String get authDialogEmail => 'Email';
+
+  @override
+  String get authDialogPassword => 'Password';
+
+  @override
+  String get authDialogSignIn => 'Sign In';
+
+  @override
+  String get authDialogSignUp => 'Sign Up';
+
+  @override
+  String get authDialogCancel => 'Cancel';
+
+  @override
+  String authError(String error) {
+    return 'Authentication error: $error';
+  }
+
+  @override
+  String get authSignedOut => 'Signed out successfully';
+
+  @override
+  String get authSignedIn => 'Signed in successfully';
+
+  @override
+  String get authSignedUp => 'Verification link sent to your email';
+
+  @override
+  String get authSignInErrorInvalidCredentials => 'Invalid email or password';
+
+  @override
+  String get authSignUpErrorAlreadyRegistered =>
+      'This email is already registered';
+
+  @override
+  String get authErrorNetwork =>
+      'Network error, please check your connection and try again';
+
+  @override
+  String get authErrorRateLimit => 'Too many requests, please try again later';
+
+  @override
+  String get onboardingYearsTitle => 'How many years of prayers did you miss?';
+
+  @override
+  String get onboardingYearsSub => 'This will help us calculate your progress';
+
+  @override
+  String get onboardingYearsHint => 'Enter number of years';
+
+  @override
+  String get onboardingYearsSave => 'Continue';
 }

@@ -1,10 +1,12 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import '../../../../di/locator.dart';
 import '../../../../theme/app_theme.dart';
 import '../../../../services/prayer_time_service.dart';
+import '../../home/views/home_screen.dart';
 import '../view_models/settings_view_model.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -30,8 +32,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Padding(
-                padding: EdgeInsets.only(
-                  left: AppTheme.spaceSm, right: AppTheme.spaceSm,
+                padding: EdgeInsetsDirectional.only(
+                  start: AppTheme.spaceSm, end: AppTheme.spaceSm,
                   top: AppTheme.spaceMd,
                 ),
                 child: Text(
@@ -43,6 +45,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     color: AppTheme.onSurface,
                     letterSpacing: -0.3,
                   ),
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
               const SizedBox(height: AppTheme.spaceXxl),
@@ -62,6 +65,38 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 value: vm.vibrationEnabled,
                 onChanged: (v) => vm.toggleVibration(v),
               ),
+              const SizedBox(height: AppTheme.spaceXxl),
+              const _GroupHeader(title: 'الحساب'),
+              const SizedBox(height: AppTheme.spaceMd),
+              if (vm.isSignedIn) ...[
+                _SettingsInfo(
+                  icon: Icons.person_rounded,
+                  title: vm.userEmail ?? '',
+                  subtitle: 'مسجل الدخول',
+                ),
+                GestureDetector(
+                  onTap: () => _signOut(context),
+                  child: _SettingsNav(
+                    icon: Icons.logout_rounded,
+                    title: 'تسجيل الخروج',
+                    subtitle: 'تسجيل الخروج من حسابك',
+                    isDestructive: true,
+                  ),
+                ),
+              ] else ...[
+                _SettingsNav(
+                  icon: Icons.login_rounded,
+                  title: 'تسجيل الدخول',
+                  subtitle: 'سجل دخولك لمزامنة بياناتك',
+                  onTap: () => _showAuthDialog(context, isSignUp: false),
+                ),
+                _SettingsNav(
+                  icon: Icons.person_add_rounded,
+                  title: 'إنشاء حساب',
+                  subtitle: 'أنشئ حساباً لمزامنة بياناتك',
+                  onTap: () => _showAuthDialog(context, isSignUp: true),
+                ),
+              ],
               const SizedBox(height: AppTheme.spaceXxl),
               const _GroupHeader(title: 'الإعدادات العامة'),
               const SizedBox(height: AppTheme.spaceMd),
@@ -88,6 +123,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 title: 'المظهر',
                 subtitle: _themeLabel(vm.themeMode),
                 onTap: () => _showThemeDialog(context),
+              ),
+              _SettingsNav(
+                icon: Icons.history_rounded,
+                title: 'سنوات القضاء',
+                subtitle: '${vm.qadaaYears} سنوات',
+                onTap: () => _showQadaaYearsDialog(context),
               ),
               const SizedBox(height: AppTheme.spaceXxl),
               const _GroupHeader(title: 'البيانات'),
@@ -118,6 +159,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     color: AppTheme.outline.withValues(alpha: 0.7),
                     letterSpacing: 0.3,
                   ),
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
               const SizedBox(height: AppTheme.spaceXl),
@@ -176,11 +218,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
           children: [
             TextField(
               controller: cityCtrl,
+              maxLength: 100,
               decoration: const InputDecoration(labelText: 'المدينة / City'),
             ),
             const SizedBox(height: AppTheme.spaceMd),
             TextField(
               controller: countryCtrl,
+              maxLength: 100,
               decoration: const InputDecoration(labelText: 'الدولة / Country'),
             ),
           ],
@@ -232,6 +276,72 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
+  void _showQadaaYearsDialog(BuildContext context) {
+    final controller = TextEditingController(text: vm.qadaaYears.toString());
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('سنوات القضاء', style: TextStyle(fontFamily: 'Plus Jakarta Sans')),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text('عدد السنوات التي تركت فيها الصلاة:', style: TextStyle(fontFamily: 'Plus Jakarta Sans', fontSize: 14)),
+            const SizedBox(height: AppTheme.spaceMd),
+            TextField(
+              controller: controller,
+              keyboardType: TextInputType.number,
+              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+              maxLength: 3,
+              textAlign: TextAlign.center,
+              decoration: InputDecoration(
+                hintText: 'مثال: 3',
+                filled: true,
+                fillColor: AppTheme.surfaceContainerHighest,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(AppTheme.radiusMd),
+                  borderSide: BorderSide.none,
+                ),
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: AppTheme.spaceLg,
+                  vertical: AppTheme.spaceLg,
+                ),
+              ),
+              style: const TextStyle(
+                fontFamily: 'Plus Jakarta Sans',
+                fontSize: 22,
+                fontWeight: FontWeight.w600,
+                color: AppTheme.onSurface,
+              ),
+            ),
+            const SizedBox(height: AppTheme.spaceSm),
+              Text(
+                'سيتم إعادة حساب جميع الإحصائيات',
+                style: TextStyle(
+                  fontFamily: 'Plus Jakarta Sans',
+                  fontSize: 12,
+                  color: AppTheme.outline,
+                ),
+                overflow: TextOverflow.ellipsis,
+              ),
+          ],
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('إلغاء')),
+          ElevatedButton(
+            onPressed: () {
+              final years = int.tryParse(controller.text.trim());
+              if (years != null && years > 0) {
+                vm.setQadaaYears(years);
+              }
+              Navigator.pop(ctx);
+            },
+            child: const Text('حفظ'),
+          ),
+        ],
+      ),
+    );
+  }
+
   void _showExportDialog(BuildContext context) {
     showDialog(
       context: context,
@@ -268,6 +378,85 @@ class _SettingsScreenState extends State<SettingsScreen> {
     } catch (e) {
       messenger.showSnackBar(
         SnackBar(content: Text('خطأ في التصدير: $e')),
+      );
+    }
+  }
+
+  void _showAuthDialog(BuildContext context, {required bool isSignUp}) {
+    final emailCtrl = TextEditingController();
+    final passwordCtrl = TextEditingController();
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(isSignUp ? 'إنشاء حساب' : 'تسجيل الدخول', style: const TextStyle(fontFamily: 'Plus Jakarta Sans')),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: emailCtrl,
+              keyboardType: TextInputType.emailAddress,
+              decoration: const InputDecoration(labelText: 'البريد الإلكتروني / Email'),
+            ),
+            const SizedBox(height: AppTheme.spaceMd),
+            TextField(
+              controller: passwordCtrl,
+              obscureText: true,
+              decoration: const InputDecoration(labelText: 'كلمة المرور / Password'),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('إلغاء')),
+          ElevatedButton(
+            onPressed: () async {
+              final email = emailCtrl.text.trim();
+              final password = passwordCtrl.text.trim();
+              if (email.isEmpty || password.isEmpty) return;
+              String? error;
+              if (isSignUp) {
+                error = await vm.signUp(email, password);
+              } else {
+                error = await vm.signIn(email, password);
+              }
+              if (!ctx.mounted) return;
+              Navigator.pop(ctx);
+              if (!context.mounted) return;
+              if (error != null) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text(error)),
+                );
+              } else if (!isSignUp) {
+                Navigator.of(context).pushReplacement(
+                  PageRouteBuilder(
+                    pageBuilder: (_, _, _) => const HomeScreen(),
+                    transitionsBuilder: (context, anim, _, child) =>
+                        FadeTransition(opacity: anim, child: child),
+                    transitionDuration: AppTheme.durationSlow,
+                  ),
+                );
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('تم إرسال رابط التفعيل إلى بريدك الإلكتروني')),
+                );
+              }
+            },
+            child: Text(isSignUp ? 'إنشاء حساب' : 'تسجيل الدخول'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _signOut(BuildContext context) async {
+    final error = await vm.signOut();
+    if (!context.mounted) return;
+    if (error != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(error)),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('تم تسجيل الخروج بنجاح')),
       );
     }
   }
@@ -311,6 +500,7 @@ class _GroupHeader extends StatelessWidget {
           color: AppTheme.onSurfaceVariant.withValues(alpha: 0.6),
           letterSpacing: 0.5,
         ),
+        overflow: TextOverflow.ellipsis,
       ),
     );
   }
@@ -366,6 +556,38 @@ class _SettingsSwitchState extends State<_SettingsSwitch> {
           activeThumbColor: AppTheme.primary,
           onChanged: (v) { setState(() => _value = v); widget.onChanged?.call(v); },
         ),
+      ),
+    );
+  }
+}
+
+class _SettingsInfo extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final String subtitle;
+
+  const _SettingsInfo({
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      margin: const EdgeInsets.only(bottom: AppTheme.spaceSm),
+      child: ListTile(
+        contentPadding: const EdgeInsets.symmetric(horizontal: AppTheme.spaceLg, vertical: 2),
+        leading: Container(
+          width: 40, height: 40,
+          decoration: BoxDecoration(
+            color: AppTheme.primary.withValues(alpha: 0.08),
+            borderRadius: BorderRadius.circular(AppTheme.radiusSm),
+          ),
+          child: Icon(icon, color: AppTheme.primary, size: 20),
+        ),
+        title: Text(title, style: const TextStyle(fontFamily: 'Plus Jakarta Sans', fontSize: 14, fontWeight: FontWeight.w600, color: AppTheme.onSurface), overflow: TextOverflow.ellipsis),
+        subtitle: Text(subtitle, style: const TextStyle(fontFamily: 'Plus Jakarta Sans', fontSize: 12, fontWeight: FontWeight.w400, color: AppTheme.onSurfaceVariant), overflow: TextOverflow.ellipsis),
       ),
     );
   }

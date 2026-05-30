@@ -29,9 +29,9 @@ class _StatsScreenState extends State<StatsScreen> {
             child: Column(mainAxisSize: MainAxisSize.min, children: [
               Icon(Icons.cloud_off_rounded, size: 48, color: AppTheme.outline.withValues(alpha: 0.5)),
               const SizedBox(height: AppTheme.spaceLg),
-              const Text('تعذر تحميل الإحصائيات', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: AppTheme.onSurface)),
+              const Text('تعذر تحميل الإحصائيات', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: AppTheme.onSurface), overflow: TextOverflow.ellipsis),
               const SizedBox(height: AppTheme.spaceSm),
-              Text(vm.error!, style: const TextStyle(fontSize: 13, color: AppTheme.onSurfaceVariant), textAlign: TextAlign.center),
+              Text(vm.error!, style: const TextStyle(fontSize: 13, color: AppTheme.onSurfaceVariant), textAlign: TextAlign.center, overflow: TextOverflow.ellipsis),
               const SizedBox(height: AppTheme.spaceXl),
               FilledButton.icon(icon: const Icon(Icons.refresh, size: 18), label: const Text('إعادة المحاولة'), onPressed: vm.load),
             ]),
@@ -42,12 +42,12 @@ class _StatsScreenState extends State<StatsScreen> {
       final dist = vm.dist;
       final weekLogs = vm.weekLogs;
       if (agg == null || dist == null || weekLogs == null) {
-        return const SafeArea(child: Center(child: Text('لا توجد بيانات', style: TextStyle(fontSize: 16, color: AppTheme.onSurfaceVariant))));
+        return const SafeArea(child: Center(child: Text('لا توجد بيانات', style: TextStyle(fontSize: 16, color: AppTheme.onSurfaceVariant), overflow: TextOverflow.ellipsis)));
       }
       return SafeArea(child: SingleChildScrollView(
         padding: const EdgeInsets.all(AppTheme.spaceLg),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          const Padding(padding: EdgeInsets.only(left: AppTheme.spaceSm, right: AppTheme.spaceSm, top: AppTheme.spaceMd), child: Text('الإحصائيات', style: TextStyle(fontFamily: 'Plus Jakarta Sans', fontSize: 24, fontWeight: FontWeight.w700, color: AppTheme.onSurface, letterSpacing: -0.3))),
+          const Padding(padding: EdgeInsetsDirectional.only(start: AppTheme.spaceSm, end: AppTheme.spaceSm, top: AppTheme.spaceMd), child: Text('الإحصائيات', style: TextStyle(fontFamily: 'Plus Jakarta Sans', fontSize: 24, fontWeight: FontWeight.w700, color: AppTheme.onSurface, letterSpacing: -0.3), overflow: TextOverflow.ellipsis)),
           const SizedBox(height: AppTheme.spaceXl),
           Wrap(spacing: AppTheme.spaceMd, runSpacing: AppTheme.spaceMd, children: [
             StatCard(label: 'هذا الأسبوع', value: '${agg['week_done']}', sub: 'صلاة مقضية', icon: Icons.date_range_rounded, color: AppTheme.primary),
@@ -56,11 +56,11 @@ class _StatsScreenState extends State<StatsScreen> {
             StatCard(label: 'معدل الإنجاز', value: _pct(agg['all_done'] ?? 0, agg['all_total'] ?? 0), sub: 'نسبة التقدم', icon: Icons.trending_up_rounded, color: AppTheme.primaryFixedDim),
           ]),
           const SizedBox(height: AppTheme.spaceXxl),
-          const Padding(padding: EdgeInsets.symmetric(horizontal: AppTheme.spaceSm), child: Text('توزيع الصلوات', style: TextStyle(fontFamily: 'Plus Jakarta Sans', fontSize: 17, fontWeight: FontWeight.w700, color: AppTheme.onSurface, letterSpacing: -0.2))),
+          const Padding(padding: EdgeInsets.symmetric(horizontal: AppTheme.spaceSm), child: Text('توزيع الصلوات', style: TextStyle(fontFamily: 'Plus Jakarta Sans', fontSize: 17, fontWeight: FontWeight.w700, color: AppTheme.onSurface, letterSpacing: -0.2), overflow: TextOverflow.ellipsis)),
           const SizedBox(height: AppTheme.spaceLg),
           _DistributionSection(dist: dist),
           const SizedBox(height: AppTheme.spaceXxl),
-          const Padding(padding: EdgeInsets.symmetric(horizontal: AppTheme.spaceSm), child: Text('آخر ٧ أيام', style: TextStyle(fontFamily: 'Plus Jakarta Sans', fontSize: 17, fontWeight: FontWeight.w700, color: AppTheme.onSurface, letterSpacing: -0.2))),
+          const Padding(padding: EdgeInsets.symmetric(horizontal: AppTheme.spaceSm), child: Text('آخر ٧ أيام', style: TextStyle(fontFamily: 'Plus Jakarta Sans', fontSize: 17, fontWeight: FontWeight.w700, color: AppTheme.onSurface, letterSpacing: -0.2), overflow: TextOverflow.ellipsis)),
           const SizedBox(height: AppTheme.spaceLg),
           WeeklyChart(weekLogs: weekLogs),
         ]),
@@ -96,9 +96,9 @@ class _DistributionSection extends StatelessWidget {
                   Row(children: [
                     Container(width: 8, height: 8, decoration: BoxDecoration(color: barColor, shape: BoxShape.circle)),
                     const SizedBox(width: AppTheme.spaceSm),
-                    Text(p.arName, style: const TextStyle(fontFamily: 'Plus Jakarta Sans', fontSize: 13, fontWeight: FontWeight.w600, color: AppTheme.onSurface)),
+                    Text(p.arName, style: const TextStyle(fontFamily: 'Plus Jakarta Sans', fontSize: 13, fontWeight: FontWeight.w600, color: AppTheme.onSurface), overflow: TextOverflow.ellipsis),
                   ]),
-                  Text('$done', style: const TextStyle(fontFamily: 'Plus Jakarta Sans', fontSize: 12, fontWeight: FontWeight.w500, color: AppTheme.onSurfaceVariant)),
+                  Text('$done', style: const TextStyle(fontFamily: 'Plus Jakarta Sans', fontSize: 12, fontWeight: FontWeight.w500, color: AppTheme.onSurfaceVariant), overflow: TextOverflow.ellipsis),
                 ]),
                 const SizedBox(height: AppTheme.spaceXs),
                 ClipRRect(borderRadius: BorderRadius.circular(3), child: LinearProgressIndicator(value: ratio, backgroundColor: AppTheme.surfaceContainerHigh, valueColor: AlwaysStoppedAnimation<Color>(barColor), minHeight: 6)),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../theme/app_theme.dart';
-import '../../home/views/home_screen.dart';
+import 'onboarding_years_page.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -49,7 +49,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
   void _goToHome() {
     Navigator.of(context).pushReplacement(
       PageRouteBuilder(
-        pageBuilder: (context, a1, a2) => const HomeScreen(),
+        pageBuilder: (context, a1, a2) => const OnboardingYearsPage(),
         transitionsBuilder: (context, anim, a2, child) => FadeTransition(
           opacity: anim,
           child: ScaleTransition(scale: anim, child: child),
@@ -95,9 +95,9 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                             child: Icon(page.icon, size: 60, color: page.color),
                           ),
                           const SizedBox(height: AppTheme.spaceXxxl),
-                          Text(page.title, style: const TextStyle(fontFamily: 'Plus Jakarta Sans', fontSize: 34, fontWeight: FontWeight.w700, color: AppTheme.onSurface, height: 1.15, letterSpacing: -0.5), textAlign: TextAlign.center, overflow: TextOverflow.ellipsis),
+                          Text(page.title, style: const TextStyle(fontFamily: 'Plus Jakarta Sans', fontSize: 34, fontWeight: FontWeight.w700, color: AppTheme.onSurface, height: 1.15, letterSpacing: -0.5), textAlign: TextAlign.center, overflow: TextOverflow.ellipsis, maxLines: 3),
                           const SizedBox(height: AppTheme.spaceXl),
-                          Text(page.subtitle, style: const TextStyle(fontFamily: 'Plus Jakarta Sans', fontSize: 16, fontWeight: FontWeight.w400, color: AppTheme.onSurfaceVariant, height: 1.6), textAlign: TextAlign.center, overflow: TextOverflow.ellipsis),
+                          Text(page.subtitle, style: const TextStyle(fontFamily: 'Plus Jakarta Sans', fontSize: 16, fontWeight: FontWeight.w400, color: AppTheme.onSurfaceVariant, height: 1.6), textAlign: TextAlign.center, overflow: TextOverflow.ellipsis, maxLines: 3),
                         ],
                       ),
                     ),

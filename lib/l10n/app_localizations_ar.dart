@@ -303,4 +303,143 @@ class AppLocalizationsAr extends AppLocalizations {
   String notifBody(String prayerName) {
     return 'حان وقت قضاء صلاة $prayerName';
   }
+
+  @override
+  String get qadaaTrackerTitle => 'تقدم القضاء';
+
+  @override
+  String qadaaTodayBanner(String prayerName) {
+    return 'الآن: وقت $prayerName';
+  }
+
+  @override
+  String get qadaaEnterCount => 'أدخل العدد';
+
+  @override
+  String get qadaaEnterValidNumber => 'يرجى إدخال عدد صحيح أكبر من صفر';
+
+  @override
+  String get qadaaLogButton => 'تسجيل';
+
+  @override
+  String get qadaaRecentActivity => 'آخر الأنشطة';
+
+  @override
+  String get qadaaFullyComplete => 'تم القضاء بالكامل!';
+
+  @override
+  String qadaaTotalMadeUp(int count) {
+    return 'إجمالي المقضي: $count';
+  }
+
+  @override
+  String qadaaPrayerMadeUp(String prayerName, int count) {
+    return '$prayerName أقضيت $count ركعة';
+  }
+
+  @override
+  String qadaaPrayerMadeUp_plural(String prayerName, int count) {
+    return '$prayerName أقضيت $count ركعات';
+  }
+
+  @override
+  String get qadaaYearsLabel => 'السنوات الفائتة';
+
+  @override
+  String get qadaaYearsSubtitle => 'سنوات الصلوات الفائتة';
+
+  @override
+  String get qadaaYearsDialogTitle => 'السنوات الفائتة';
+
+  @override
+  String get qadaaYearsDialogHint => 'أدخل عدد السنوات';
+
+  @override
+  String get qadaaYearsDialogSave => 'حفظ';
+
+  @override
+  String get qadaaYearsResetWarning =>
+      'تغيير السنوات سيعيد تعيين تقدمك الحالي.';
+
+  @override
+  String get settingsGroupAccount => 'الحساب';
+
+  @override
+  String get settingSignIn => 'تسجيل الدخول';
+
+  @override
+  String get settingSignInSub => 'سجل دخولك لمزامنة بياناتك';
+
+  @override
+  String get settingSignUp => 'إنشاء حساب';
+
+  @override
+  String get settingSignOut => 'تسجيل الخروج';
+
+  @override
+  String get settingSignOutSub => 'تسجيل الخروج من حسابك';
+
+  @override
+  String settingSignedInAs(String email) {
+    return 'مسجل الدخول باسم $email';
+  }
+
+  @override
+  String get authDialogTitle => 'تسجيل الدخول';
+
+  @override
+  String get authDialogEmail => 'البريد الإلكتروني';
+
+  @override
+  String get authDialogPassword => 'كلمة المرور';
+
+  @override
+  String get authDialogSignIn => 'تسجيل الدخول';
+
+  @override
+  String get authDialogSignUp => 'إنشاء حساب';
+
+  @override
+  String get authDialogCancel => 'إلغاء';
+
+  @override
+  String authError(String error) {
+    return 'خطأ في المصادقة: $error';
+  }
+
+  @override
+  String get authSignedOut => 'تم تسجيل الخروج بنجاح';
+
+  @override
+  String get authSignedIn => 'تم تسجيل الدخول بنجاح';
+
+  @override
+  String get authSignedUp => 'تم إرسال رابط التفعيل إلى بريدك الإلكتروني';
+
+  @override
+  String get authSignInErrorInvalidCredentials =>
+      'البريد الإلكتروني أو كلمة المرور غير صحيحة';
+
+  @override
+  String get authSignUpErrorAlreadyRegistered =>
+      'هذا البريد الإلكتروني مسجل مسبقاً';
+
+  @override
+  String get authErrorNetwork =>
+      'خطأ في الاتصال بالشبكة، تحقق من اتصالك وحاول مرة أخرى';
+
+  @override
+  String get authErrorRateLimit => 'طلبات كثيرة جداً، حاول بعد قليل';
+
+  @override
+  String get onboardingYearsTitle => 'كم سنة فاتتك من الصلوات؟';
+
+  @override
+  String get onboardingYearsSub => 'سيساعدنا هذا في حساب تقدمك بدقة';
+
+  @override
+  String get onboardingYearsHint => 'أدخل عدد السنوات';
+
+  @override
+  String get onboardingYearsSave => 'متابعة';
 }

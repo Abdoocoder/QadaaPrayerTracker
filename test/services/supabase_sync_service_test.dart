@@ -24,7 +24,7 @@ void main() {
     syncService = SupabaseSyncService(supabase: supabase, db: db);
 
     final database = await db.database;
-    for (final t in ['prayer_logs', 'prayer_times', 'settings']) {
+    for (final t in ['prayer_logs', 'prayer_times', 'settings', 'qadaa_progress', 'qadaa_logs']) {
       await database.execute('DROP TABLE IF EXISTS "$t"');
     }
     await database.execute('''
@@ -53,6 +53,22 @@ void main() {
       CREATE TABLE settings (
         key TEXT PRIMARY KEY,
         value TEXT NOT NULL
+      )
+    ''');
+    await database.execute('''
+      CREATE TABLE qadaa_progress (
+        prayer_name TEXT PRIMARY KEY,
+        total_missed INTEGER NOT NULL,
+        completed INTEGER NOT NULL DEFAULT 0,
+        updated_at TEXT NOT NULL
+      )
+    ''');
+    await database.execute('''
+      CREATE TABLE qadaa_logs (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        prayer_name TEXT NOT NULL,
+        count INTEGER NOT NULL,
+        created_at TEXT NOT NULL
       )
     ''');
   });

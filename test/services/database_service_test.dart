@@ -27,6 +27,8 @@ void main() {
       expect(names, contains('prayer_logs'));
       expect(names, contains('prayer_times'));
       expect(names, contains('settings'));
+      expect(names, contains('qadaa_progress'));
+      expect(names, contains('qadaa_logs'));
     });
 
     test('ensureTodayLogs inserts 5 prayer logs for today', () async {

@@ -21,7 +21,7 @@ class DatabaseService {
     final path = p.join(dbPath, dbName);
     return openDatabase(
       path,
-      version: 3,
+      version: 4,
       onCreate: (db, _) async {
         await db.execute('''
           CREATE TABLE prayer_logs (
@@ -51,6 +51,22 @@ class DatabaseService {
             value TEXT NOT NULL
           )
         ''');
+        await db.execute('''
+          CREATE TABLE qadaa_progress (
+            prayer_name TEXT PRIMARY KEY,
+            total_missed INTEGER NOT NULL,
+            completed INTEGER NOT NULL DEFAULT 0,
+            updated_at TEXT NOT NULL
+          )
+        ''');
+        await db.execute('''
+          CREATE TABLE qadaa_logs (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            prayer_name TEXT NOT NULL,
+            count INTEGER NOT NULL,
+            created_at TEXT NOT NULL
+          )
+        ''');
       },
       onUpgrade: (db, old, _) async {
         if (old < 2) {
@@ -72,6 +88,24 @@ class DatabaseService {
             CREATE TABLE IF NOT EXISTS settings (
               key TEXT PRIMARY KEY,
               value TEXT NOT NULL
+            )
+          ''');
+        }
+        if (old < 4) {
+          await db.execute('''
+            CREATE TABLE IF NOT EXISTS qadaa_progress (
+              prayer_name TEXT PRIMARY KEY,
+              total_missed INTEGER NOT NULL,
+              completed INTEGER NOT NULL DEFAULT 0,
+              updated_at TEXT NOT NULL
+            )
+          ''');
+          await db.execute('''
+            CREATE TABLE IF NOT EXISTS qadaa_logs (
+              id INTEGER PRIMARY KEY AUTOINCREMENT,
+              prayer_name TEXT NOT NULL,
+              count INTEGER NOT NULL,
+              created_at TEXT NOT NULL
             )
           ''');
         }

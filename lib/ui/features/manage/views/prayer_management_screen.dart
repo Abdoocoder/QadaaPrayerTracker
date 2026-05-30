@@ -16,17 +16,36 @@ class _PrayerManagementScreenState extends State<PrayerManagementScreen> {
   final vm = sl<ManageViewModel>();
 
   @override
-  void initState() { super.initState(); vm.loadDay(); }
+  void initState() {
+    super.initState();
+    vm.addListener(_onError);
+    vm.loadDay();
+  }
+
+  @override
+  void dispose() {
+    vm.removeListener(_onError);
+    super.dispose();
+  }
+
+  void _onError() {
+    if (vm.error != null && mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(vm.error!), backgroundColor: AppTheme.error),
+      );
+      vm.error = null;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return ListenableBuilder(listenable: vm, builder: (context, _) {
       return Scaffold(
-        appBar: AppBar(title: const Text('إدارة الصلوات', style: TextStyle(fontFamily: 'Plus Jakarta Sans', fontSize: 19, fontWeight: FontWeight.w700))),
+        appBar: AppBar(title: const Text('إدارة الصلوات', style: TextStyle(fontFamily: 'Plus Jakarta Sans', fontSize: 19, fontWeight: FontWeight.w700), overflow: TextOverflow.ellipsis)),
         body: ListView(padding: const EdgeInsets.all(AppTheme.spaceLg), children: [
           DateStrip(selected: vm.selectedDay, dates: vm.dates, onSelect: (i) => vm.selectDay(i)),
           const SizedBox(height: AppTheme.spaceXl),
-          Text('اختر الصلوات التي قضيتها', style: TextStyle(fontFamily: 'Plus Jakarta Sans', fontSize: 15, fontWeight: FontWeight.w600, color: AppTheme.onSurfaceVariant.withValues(alpha: 0.8))),
+          Text('اختر الصلوات التي قضيتها', style: TextStyle(fontFamily: 'Plus Jakarta Sans', fontSize: 15, fontWeight: FontWeight.w600, color: AppTheme.onSurfaceVariant.withValues(alpha: 0.8)), overflow: TextOverflow.ellipsis),
           const SizedBox(height: AppTheme.spaceLg),
           if (vm.loading) const Center(child: Padding(padding: EdgeInsets.all(AppTheme.spaceXxl), child: CircularProgressIndicator()))
           else ...allPrayers.map((p) => ToggleTile(

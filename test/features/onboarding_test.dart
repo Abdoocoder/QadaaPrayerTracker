@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:qadaa_prayer_tracker/app.dart';
 import '../helpers/test_setup.dart';
 
 void main() {
   setUpAll(() async {
+    databaseFactory = databaseFactoryFfi;
     await testSetupDi();
   });
 
@@ -46,12 +48,25 @@ void main() {
       expect(find.text('ابدأ الآن'), findsOneWidget);
     });
 
-    testWidgets('تخطي navigates to HomeScreen', (tester) async {
+    testWidgets('تخطي navigates to years input page', (tester) async {
       await tester.pumpWidget(const QadaaApp());
       await tester.pump();
       await tester.tap(find.text('تخطي'));
       await tester.pumpAndSettle();
-      // After skip, we should see the home screen navigation bar
+      // After skip, we should see the years input page
+      expect(find.textContaining('سنوات'), findsWidgets);
+    });
+
+    testWidgets('years page save navigates to HomeScreen', (tester) async {
+      await tester.pumpWidget(const QadaaApp());
+      await tester.pump();
+      await tester.tap(find.text('تخطي'));
+      await tester.pumpAndSettle();
+
+      await tester.enterText(find.byType(TextField), '5');
+      await tester.tap(find.text('متابعة'));
+      await tester.pumpAndSettle();
+
       expect(find.text('الرئيسية'), findsOneWidget);
       expect(find.text('الإحصائيات'), findsOneWidget);
       expect(find.text('المحتوى'), findsOneWidget);

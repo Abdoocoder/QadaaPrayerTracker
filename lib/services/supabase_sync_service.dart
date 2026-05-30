@@ -38,6 +38,10 @@ class SupabaseSyncService {
       uploaded += settingsResult.$1;
       downloaded += settingsResult.$2;
 
+      final qadaaResult = await _syncQadaaTables();
+      uploaded += qadaaResult.$1;
+      downloaded += qadaaResult.$2;
+
       _progressController.add(SyncProgress.complete(uploaded, downloaded));
       return SyncResult(uploaded, downloaded, null);
     } catch (e) {
@@ -105,6 +109,41 @@ class SupabaseSyncService {
         row['value'] as String,
       );
       uploaded++;
+    }
+
+    return (uploaded, 0);
+  }
+
+  Future<(int, int)> _syncQadaaTables() async {
+    final db = await _db.database;
+    int uploaded = 0;
+
+    final progressRows = await db.query('qadaa_progress');
+    for (final row in progressRows) {
+      try {
+        await _supabase.upsertQadaaProgress(
+          prayerName: row['prayer_name'] as String,
+          totalMissed: row['total_missed'] as int,
+          completed: row['completed'] as int,
+        );
+        uploaded++;
+      } catch (e) {
+        debugPrint('Failed to sync qadaa_progress: $e');
+      }
+    }
+
+    final logRows = await db.query('qadaa_logs');
+    for (final row in logRows) {
+      try {
+        await _supabase.upsertQadaaLog(
+          prayerName: row['prayer_name'] as String,
+          count: row['count'] as int,
+          createdAt: row['created_at'] as String,
+        );
+        uploaded++;
+      } catch (e) {
+        debugPrint('Failed to sync qadaa_logs: $e');
+      }
     }
 
     return (uploaded, 0);

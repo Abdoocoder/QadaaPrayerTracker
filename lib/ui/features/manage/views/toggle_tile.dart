@@ -65,9 +65,9 @@ class _ToggleTileState extends State<ToggleTile> with SingleTickerProviderStateM
               ),
               const SizedBox(width: AppTheme.spaceLg),
               Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text(widget.name, style: TextStyle(fontFamily: 'Plus Jakarta Sans', fontSize: 15, fontWeight: FontWeight.w600, color: _done ? AppTheme.onSurfaceVariant : AppTheme.onSurface, decoration: _done ? TextDecoration.lineThrough : null)),
+                Text(widget.name, style: TextStyle(fontFamily: 'Plus Jakarta Sans', fontSize: 15, fontWeight: FontWeight.w600, color: _done ? AppTheme.onSurfaceVariant : AppTheme.onSurface, decoration: _done ? TextDecoration.lineThrough : null), overflow: TextOverflow.ellipsis),
               ])),
-              Text(widget.time, style: const TextStyle(fontFamily: 'Plus Jakarta Sans', fontSize: 13, fontWeight: FontWeight.w500, color: AppTheme.outline)),
+              Text(widget.time, style: const TextStyle(fontFamily: 'Plus Jakarta Sans', fontSize: 13, fontWeight: FontWeight.w500, color: AppTheme.outline), overflow: TextOverflow.ellipsis),
             ],
           ),
         ),

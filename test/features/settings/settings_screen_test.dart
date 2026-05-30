@@ -8,6 +8,23 @@ import '../../helpers/test_setup.dart';
 
 Widget wrapApp(Widget w) => MaterialApp(home: Scaffold(body: w));
 
+SettingsViewModel makeVm({
+  MockDatabaseService? db,
+  MockNotificationService? notifService,
+}) {
+  return SettingsViewModel(
+    logRepo: MockLogRepo(),
+    notifService: notifService ?? MockNotificationService(),
+    db: db ?? MockDatabaseService(),
+    prayerTimeService: MockPrayerTimeService(),
+    qadaaService: MockQadaaService(),
+    supabase: MockSupabaseService(),
+    syncService: MockSupabaseSyncService(),
+    localeNotifier: MockLocaleNotifier(),
+    themeNotifier: MockThemeNotifier(),
+  );
+}
+
 void main() {
   setUpAll(() async {
     await testSetupDi();
@@ -19,15 +36,7 @@ void main() {
 
   group('SettingsScreen', () {
     testWidgets('loads data on init', (tester) async {
-      final vm = SettingsViewModel(
-        logRepo: MockLogRepo(),
-        notifService: MockNotificationService(),
-        db: MockDatabaseService(),
-        prayerTimeService: MockPrayerTimeService(),
-        localeNotifier: MockLocaleNotifier(),
-        themeNotifier: MockThemeNotifier(),
-      );
-      sl.registerFactory<SettingsViewModel>(() => vm);
+      sl.registerFactory<SettingsViewModel>(() => makeVm());
 
       await tester.pumpWidget(wrapApp(const SettingsScreen()));
       await tester.pump();
@@ -36,15 +45,7 @@ void main() {
     });
 
     testWidgets('shows notification switches after load', (tester) async {
-      final vm = SettingsViewModel(
-        logRepo: MockLogRepo(),
-        notifService: MockNotificationService(),
-        db: MockDatabaseService(),
-        prayerTimeService: MockPrayerTimeService(),
-        localeNotifier: MockLocaleNotifier(),
-        themeNotifier: MockThemeNotifier(),
-      );
-      sl.registerFactory<SettingsViewModel>(() => vm);
+      sl.registerFactory<SettingsViewModel>(() => makeVm());
 
       await tester.pumpWidget(wrapApp(const SettingsScreen()));
       await tester.pump();
@@ -54,15 +55,7 @@ void main() {
     });
 
     testWidgets('shows general settings nav items', (tester) async {
-      final vm = SettingsViewModel(
-        logRepo: MockLogRepo(),
-        notifService: MockNotificationService(),
-        db: MockDatabaseService(),
-        prayerTimeService: MockPrayerTimeService(),
-        localeNotifier: MockLocaleNotifier(),
-        themeNotifier: MockThemeNotifier(),
-      );
-      sl.registerFactory<SettingsViewModel>(() => vm);
+      sl.registerFactory<SettingsViewModel>(() => makeVm());
 
       await tester.pumpWidget(wrapApp(const SettingsScreen()));
       await tester.pump();
@@ -70,18 +63,12 @@ void main() {
       expect(find.text('اللغة'), findsOneWidget);
       expect(find.text('حساب التاريخ'), findsOneWidget);
       expect(find.text('موقعي'), findsOneWidget);
+      expect(find.text('المظهر'), findsOneWidget);
+      expect(find.text('سنوات القضاء'), findsOneWidget);
     });
 
     testWidgets('shows data section nav items', (tester) async {
-      final vm = SettingsViewModel(
-        logRepo: MockLogRepo(),
-        notifService: MockNotificationService(),
-        db: MockDatabaseService(),
-        prayerTimeService: MockPrayerTimeService(),
-        localeNotifier: MockLocaleNotifier(),
-        themeNotifier: MockThemeNotifier(),
-      );
-      sl.registerFactory<SettingsViewModel>(() => vm);
+      sl.registerFactory<SettingsViewModel>(() => makeVm());
 
       await tester.pumpWidget(wrapApp(const SettingsScreen()));
       await tester.pump();
@@ -91,15 +78,7 @@ void main() {
     });
 
     testWidgets('shows version info', (tester) async {
-      final vm = SettingsViewModel(
-        logRepo: MockLogRepo(),
-        notifService: MockNotificationService(),
-        db: MockDatabaseService(),
-        prayerTimeService: MockPrayerTimeService(),
-        localeNotifier: MockLocaleNotifier(),
-        themeNotifier: MockThemeNotifier(),
-      );
-      sl.registerFactory<SettingsViewModel>(() => vm);
+      sl.registerFactory<SettingsViewModel>(() => makeVm());
 
       await tester.pumpWidget(wrapApp(const SettingsScreen()));
       await tester.pump();
@@ -109,14 +88,7 @@ void main() {
 
     testWidgets('shows location display', (tester) async {
       final db = MockDatabaseService();
-      final vm = SettingsViewModel(
-        logRepo: MockLogRepo(),
-        notifService: MockNotificationService(),
-        db: db,
-        prayerTimeService: MockPrayerTimeService(),
-        localeNotifier: MockLocaleNotifier(),
-        themeNotifier: MockThemeNotifier(),
-      );
+      final vm = makeVm(db: db);
       sl.registerFactory<SettingsViewModel>(() => vm);
 
       await tester.pumpWidget(wrapApp(const SettingsScreen()));
@@ -128,37 +100,49 @@ void main() {
       expect(find.text('Cairo، Egypt'), findsOneWidget);
     });
 
-    testWidgets('language tap opens dialog', (tester) async {
-      final vm = SettingsViewModel(
-        logRepo: MockLogRepo(),
-        notifService: MockNotificationService(),
-        db: MockDatabaseService(),
-        prayerTimeService: MockPrayerTimeService(),
-        localeNotifier: MockLocaleNotifier(),
-        themeNotifier: MockThemeNotifier(),
-      );
-      sl.registerFactory<SettingsViewModel>(() => vm);
+    testWidgets('shows qadaa years count', (tester) async {
+      sl.registerFactory<SettingsViewModel>(() => makeVm());
 
       await tester.pumpWidget(wrapApp(const SettingsScreen()));
       await tester.pump();
 
+      expect(find.text('سنوات القضاء'), findsOneWidget);
+      expect(find.text('0 سنوات'), findsOneWidget);
+    });
+
+    testWidgets('language tap opens dialog', (tester) async {
+      sl.registerFactory<SettingsViewModel>(() => makeVm());
+
+      await tester.pumpWidget(wrapApp(const SettingsScreen()));
+      await tester.pump();
+
+      await tester.ensureVisible(find.text('اللغة'));
+      await tester.pump();
       await tester.tap(find.text('اللغة'));
       await tester.pumpAndSettle();
 
       expect(find.text('English'), findsOneWidget);
     });
 
+    testWidgets('qadaa years tap opens dialog', (tester) async {
+      sl.registerFactory<SettingsViewModel>(() => makeVm());
+
+      await tester.pumpWidget(wrapApp(const SettingsScreen()));
+      await tester.pump();
+
+      final tile = find.text('سنوات القضاء');
+      await tester.ensureVisible(tile);
+      await tester.pump();
+      await tester.tap(tile);
+      await tester.pumpAndSettle();
+
+      expect(find.text('عدد السنوات التي تركت فيها الصلاة:'), findsOneWidget);
+    });
+
     testWidgets('export data tap opens dialog', (tester) async {
       final notifService = MockNotificationService();
       final db = MockDatabaseService();
-      final vm = SettingsViewModel(
-        logRepo: MockLogRepo(),
-        notifService: notifService,
-        db: db,
-        prayerTimeService: MockPrayerTimeService(),
-        localeNotifier: MockLocaleNotifier(),
-        themeNotifier: MockThemeNotifier(),
-      );
+      final vm = makeVm(db: db, notifService: notifService);
       sl.registerFactory<SettingsViewModel>(() => vm);
 
       await tester.pumpWidget(wrapApp(const SettingsScreen()));

@@ -3,7 +3,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:qadaa_prayer_tracker/theme/app_theme.dart';
 import 'package:qadaa_prayer_tracker/ui/core/widgets/stat_card.dart';
 import 'package:qadaa_prayer_tracker/ui/core/widgets/section_header.dart';
-import 'package:qadaa_prayer_tracker/ui/features/home/views/greeting_header.dart';
 import 'package:qadaa_prayer_tracker/ui/features/manage/views/toggle_tile.dart';
 import 'package:qadaa_prayer_tracker/ui/features/manage/views/date_strip.dart';
 
@@ -53,14 +52,6 @@ void main() {
       )));
       await tester.tap(find.text('إجراء'));
       expect(tapped, isTrue);
-    });
-  });
-
-  group('GreetingHeader', () {
-    testWidgets('renders greeting and name', (tester) async {
-      await tester.pumpWidget(wrapApp(const GreetingHeader()));
-      expect(find.text('السلام عليكم'), findsOneWidget);
-      expect(find.text('عبد الله'), findsOneWidget);
     });
   });
 

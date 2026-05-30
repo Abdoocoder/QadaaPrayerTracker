@@ -4,6 +4,9 @@ import '../../../../data/repositories/prayer_log_repository.dart';
 import '../../../../services/database_service.dart';
 import '../../../../services/notification_service.dart';
 import '../../../../services/prayer_time_service.dart';
+import '../../../../services/qadaa_service.dart';
+import '../../../../services/supabase_service.dart';
+import '../../../../services/supabase_sync_service.dart';
 import '../../../../di/locale_notifier.dart';
 import '../../../../di/theme_notifier.dart';
 
@@ -12,8 +15,11 @@ class SettingsViewModel extends ChangeNotifier {
   final NotificationService _notifService;
   final DatabaseService _db;
   final PrayerTimeService _prayerTimeService;
+  final QadaaService _qadaaService;
   final LocaleNotifier _localeNotifier;
   final ThemeNotifier _themeNotifier;
+  final SupabaseService _supabase;
+  final SupabaseSyncService _syncService;
 
   bool notificationsEnabled = false;
   bool vibrationEnabled = true;
@@ -33,17 +39,33 @@ class SettingsViewModel extends ChangeNotifier {
   ThemeMode get themeMode => _themeMode;
   String get methodName => PrayerTimeService.calculationMethods[_method] ?? 'Muslim World League';
   String get locationDisplay => '$_city، $_country';
+  int get qadaaYears => _qadaaService.getYears();
+
+  bool get isSignedIn => _supabase.isSignedIn;
+  String? get userEmail => _supabase.userEmail;
 
   SettingsViewModel({
     required PrayerLogRepository logRepo,
     required NotificationService notifService,
     required DatabaseService db,
     required PrayerTimeService prayerTimeService,
+    required QadaaService qadaaService,
+    required SupabaseService supabase,
+    required SupabaseSyncService syncService,
     required LocaleNotifier localeNotifier,
     required ThemeNotifier themeNotifier,
   }) : _logRepo = logRepo, _notifService = notifService, _db = db,
-       _prayerTimeService = prayerTimeService, _localeNotifier = localeNotifier,
-       _themeNotifier = themeNotifier;
+       _prayerTimeService = prayerTimeService, _qadaaService = qadaaService,
+       _supabase = supabase, _syncService = syncService,
+       _localeNotifier = localeNotifier, _themeNotifier = themeNotifier {
+    _supabase.addAuthListener(notifyListeners);
+  }
+
+  @override
+  void dispose() {
+    _supabase.removeAuthListener(notifyListeners);
+    super.dispose();
+  }
 
   Future<void> loadSettings() async {
     error = null;
@@ -160,6 +182,16 @@ class SettingsViewModel extends ChangeNotifier {
     }
   }
 
+  Future<void> setQadaaYears(int years) async {
+    try {
+      await _qadaaService.resetFromYears(years);
+      notifyListeners();
+    } catch (e) {
+      error = e.toString();
+      notifyListeners();
+    }
+  }
+
   Future<String> exportCsv() async {
     final db = await _db.database;
     final rows = await db.rawQuery(
@@ -182,6 +214,37 @@ class SettingsViewModel extends ChangeNotifier {
       'SELECT date, prayer_name, completed, created_at FROM prayer_logs ORDER BY date DESC, prayer_name',
     );
     return const JsonEncoder.withIndent('  ').convert(rows);
+  }
+
+  Future<String?> signIn(String email, String password) async {
+    try {
+      await _supabase.signIn(email, password);
+      await _syncService.syncAll();
+      notifyListeners();
+      return null;
+    } catch (e) {
+      return SupabaseService.friendlyError(e);
+    }
+  }
+
+  Future<String?> signUp(String email, String password) async {
+    try {
+      await _supabase.signUp(email, password);
+      notifyListeners();
+      return null;
+    } catch (e) {
+      return SupabaseService.friendlyError(e);
+    }
+  }
+
+  Future<String?> signOut() async {
+    try {
+      await _supabase.signOut();
+      notifyListeners();
+      return null;
+    } catch (e) {
+      return SupabaseService.friendlyError(e);
+    }
   }
 
   Future<void> resetData() async {

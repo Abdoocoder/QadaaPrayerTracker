@@ -9,7 +9,9 @@ import 'package:qadaa_prayer_tracker/domain/models/prayer_times.dart';
 import 'package:qadaa_prayer_tracker/services/database_service.dart';
 import 'package:qadaa_prayer_tracker/services/notification_service.dart';
 import 'package:qadaa_prayer_tracker/services/prayer_time_service.dart';
+import 'package:qadaa_prayer_tracker/services/qadaa_service.dart';
 import 'package:qadaa_prayer_tracker/services/supabase_service.dart';
+import 'package:qadaa_prayer_tracker/services/supabase_sync_service.dart';
 import 'package:qadaa_prayer_tracker/di/locale_notifier.dart';
 import 'package:qadaa_prayer_tracker/di/theme_notifier.dart';
 
@@ -129,6 +131,14 @@ class MockSupabaseService implements SupabaseService {
   bool failOnGetPrayerLogs = false;
   bool failOnUpsertSetting = false;
 
+  final _authListeners = <VoidCallback>[];
+
+  @override
+  void addAuthListener(VoidCallback cb) => _authListeners.add(cb);
+
+  @override
+  void removeAuthListener(VoidCallback cb) => _authListeners.remove(cb);
+
   final upsertedLogs = <Map<String, dynamic>>[];
   final upsertedSettings = <String, String>{};
   List<Map<String, dynamic>> cloudLogs = [];
@@ -198,6 +208,55 @@ class MockSupabaseService implements SupabaseService {
 
   @override
   Future<String?> getSetting(String key) async => null;
+
+  final upsertedQadaaProgress = <Map<String, dynamic>>[];
+  final qadaaProgressData = <String, Map<String, dynamic>>{};
+  final qadaaLogsData = <Map<String, dynamic>>[];
+
+  @override
+  Future<void> upsertQadaaProgress({
+    required String prayerName,
+    required int totalMissed,
+    required int completed,
+  }) async {
+    upsertedQadaaProgress.add({
+      'prayer_name': prayerName,
+      'total_missed': totalMissed,
+      'completed': completed,
+    });
+    qadaaProgressData[prayerName] = {
+      'prayer_name': prayerName,
+      'total_missed': totalMissed,
+      'completed': completed,
+      'updated_at': DateTime.now().toIso8601String(),
+    };
+  }
+
+  @override
+  Future<Map<String, dynamic>?> getQadaaProgress(String prayerName) async {
+    return qadaaProgressData[prayerName];
+  }
+
+  @override
+  Future<void> upsertQadaaLog({
+    required String prayerName,
+    required int count,
+    required String createdAt,
+  }) async {
+    qadaaLogsData.add({
+      'prayer_name': prayerName,
+      'count': count,
+      'created_at': createdAt,
+    });
+  }
+
+  @override
+  Future<List<Map<String, dynamic>>> getQadaaLogs({int? limit}) async {
+    var logs = List<Map<String, dynamic>>.from(qadaaLogsData);
+    logs.sort((a, b) => (b['created_at'] as String).compareTo(a['created_at'] as String));
+    if (limit != null && logs.length > limit) logs = logs.sublist(0, limit);
+    return logs;
+  }
 }
 
 class MockPrayerTimeService extends PrayerTimeService {
@@ -231,4 +290,31 @@ class MockThemeNotifier extends ChangeNotifier implements ThemeNotifier {
   ThemeMode get themeMode => _themeMode;
   @override
   void setThemeMode(ThemeMode mode) { _themeMode = mode; notifyListeners(); }
+}
+
+class MockQadaaService extends QadaaService {
+  MockQadaaService() : super(db: MockDatabaseService());
+
+  int _years = 0;
+
+  @override
+  int getYears() => _years;
+
+  @override
+  Future<void> resetFromYears(int years) async {
+    _years = years;
+  }
+}
+
+class MockSupabaseSyncService extends SupabaseSyncService {
+  MockSupabaseSyncService()
+      : super(supabase: MockSupabaseService(), db: MockDatabaseService());
+
+  bool didSyncAll = false;
+
+  @override
+  Future<SyncResult> syncAll() async {
+    didSyncAll = true;
+    return SyncResult(0, 0, null);
+  }
 }
