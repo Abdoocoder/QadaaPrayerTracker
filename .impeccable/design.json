@@ -1,0 +1,146 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-05-30T00:00:00Z",
+  "title": "Design System: Qadaa Prayer Tracker",
+  "extensions": {
+    "colorMeta": {
+      "sacred-green": { "role": "primary", "displayName": "Sacred Green", "canonical": "oklch(0.35 0.085 170)", "tonalRamp": ["oklch(0.12 0.01 170)", "oklch(0.22 0.04 170)", "oklch(0.35 0.085 170)", "oklch(0.45 0.07 170)", "oklch(0.56 0.055 170)", "oklch(0.67 0.04 170)", "oklch(0.78 0.025 170)", "oklch(0.90 0.01 170)"] },
+      "on-sacred-green": { "role": "primary", "displayName": "On Sacred Green", "canonical": "oklch(0.97 0.003 100)", "tonalRamp": [] },
+      "on-sacred-green-container": { "role": "primary", "displayName": "On Sacred Green Container", "canonical": "oklch(0.72 0.05 165)", "tonalRamp": [] },
+      "trust-blue": { "role": "secondary", "displayName": "Trust Blue", "canonical": "oklch(0.45 0.12 250)", "tonalRamp": ["oklch(0.15 0.02 250)", "oklch(0.28 0.06 250)", "oklch(0.45 0.12 250)", "oklch(0.55 0.10 250)", "oklch(0.66 0.08 250)", "oklch(0.76 0.05 250)", "oklch(0.85 0.03 250)", "oklch(0.95 0.01 250)"] },
+      "dark-slate": { "role": "tertiary", "displayName": "Dark Slate", "canonical": "oklch(0.25 0.015 240)", "tonalRamp": [] },
+      "surface-bright": { "role": "neutral", "displayName": "Surface Bright", "canonical": "oklch(0.96 0.006 150)", "tonalRamp": [] },
+      "surface-container-low": { "role": "neutral", "displayName": "Surface Container Low", "canonical": "oklch(0.93 0.005 150)", "tonalRamp": [] },
+      "surface-container": { "role": "neutral", "displayName": "Surface Container", "canonical": "oklch(0.90 0.005 150)", "tonalRamp": [] },
+      "surface-container-high": { "role": "neutral", "displayName": "Surface Container High", "canonical": "oklch(0.87 0.005 150)", "tonalRamp": [] },
+      "surface-container-highest": { "role": "neutral", "displayName": "Surface Container Highest", "canonical": "oklch(0.84 0.005 150)", "tonalRamp": [] },
+      "on-surface": { "role": "neutral", "displayName": "On Surface", "canonical": "oklch(0.15 0.01 150)", "tonalRamp": [] },
+      "on-surface-variant": { "role": "neutral", "displayName": "On Surface Variant", "canonical": "oklch(0.35 0.015 140)", "tonalRamp": [] },
+      "outline": { "role": "neutral", "displayName": "Outline", "canonical": "oklch(0.55 0.015 140)", "tonalRamp": [] },
+      "outline-variant": { "role": "neutral", "displayName": "Outline Variant", "canonical": "oklch(0.78 0.01 140)", "tonalRamp": [] },
+      "dark-surface": { "role": "neutral", "displayName": "Dark Surface", "canonical": "oklch(0.14 0.01 155)", "tonalRamp": [] },
+      "dark-on-surface": { "role": "neutral", "displayName": "Dark On Surface", "canonical": "oklch(0.88 0.005 150)", "tonalRamp": [] },
+      "dark-on-surface-variant": { "role": "neutral", "displayName": "Dark On Surface Variant", "canonical": "oklch(0.77 0.01 140)", "tonalRamp": [] },
+      "dark-primary": { "role": "primary", "displayName": "Dark Primary", "canonical": "oklch(0.72 0.05 165)", "tonalRamp": [] },
+      "error-red": { "role": "error", "displayName": "Error Red", "canonical": "oklch(0.50 0.22 30)", "tonalRamp": [] },
+      "chart-fajr": { "role": "custom", "displayName": "Chart Fajr", "canonical": "oklch(0.67 0.10 90)", "tonalRamp": [] },
+      "chart-dhuhr": { "role": "custom", "displayName": "Chart Dhuhr", "canonical": "oklch(0.52 0.08 150)", "tonalRamp": [] },
+      "chart-asr": { "role": "custom", "displayName": "Chart Asr", "canonical": "oklch(0.55 0.10 40)", "tonalRamp": [] },
+      "chart-maghrib": { "role": "custom", "displayName": "Chart Maghrib", "canonical": "oklch(0.45 0.06 70)", "tonalRamp": [] },
+      "chart-isha": { "role": "custom", "displayName": "Chart Isha", "canonical": "oklch(0.48 0.08 270)", "tonalRamp": [] }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Stat card values — short, scannable numbers with tight letter-spacing for impact." },
+      "headline": { "displayName": "Headline", "purpose": "Screen titles and section headings." },
+      "title": { "displayName": "Title", "purpose": "Card titles, list item names, button labels." },
+      "body": { "displayName": "Body", "purpose": "Primary reading text — line length capped at 65-75ch." },
+      "label": { "displayName": "Label", "purpose": "Navigation bar labels, stat card labels, small metadata." }
+    },
+    "shadows": [],
+    "motion": [
+      { "name": "ease-out-strong", "value": "cubic-bezier(0.23, 1, 0.32, 1)", "purpose": "Default easing for all state transitions — press scale, toggle animations, visibility changes." },
+      { "name": "ease-in-out-strong", "value": "cubic-bezier(0.77, 0, 0.175, 1)", "purpose": "Easing for reversible transitions (enter/exit, expand/collapse)." },
+      { "name": "duration-fast", "value": "150ms", "purpose": "Feedback animations — press scale, toggle check, button states." },
+      { "name": "duration-base", "value": "250ms", "purpose": "Standard transitions — screen slides, visibility changes." },
+      { "name": "duration-slow", "value": "350ms", "purpose": "Expressive transitions — size changes, complex visibility." }
+    ],
+    "breakpoints": [
+      { "name": "mobile", "value": "0px", "purpose": "Default layout — single column, bottom navigation." },
+      { "name": "tablet", "value": "600px", "purpose": "Wider layout — two-column grids, adjusted container widths." }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Primary call-to-action button. Used for log prayer, save, confirm, and primary navigation actions.",
+      "html": "<button class=\"ds-btn-primary\">LOG PRAYER</button>",
+      "css": ".ds-btn-primary { background: #064E3B; color: #FCFCF5; border: none; border-radius: 6px; padding: 12px 24px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 15px; font-weight: 600; letter-spacing: 0.3px; cursor: pointer; transition: transform 0.15s cubic-bezier(0.23, 1, 0.32, 1); } .ds-btn-primary:active { transform: scale(0.97); }"
+    },
+    {
+      "name": "Primary Button (Dark)",
+      "kind": "button",
+      "refersTo": "button-primary-dark",
+      "description": "Primary button for dark mode. Inverted fill for legibility on dark surfaces.",
+      "html": "<button class=\"ds-btn-primary-dark\">LOG PRAYER</button>",
+      "css": ".ds-btn-primary-dark { background: #80BEA6; color: #0F1A14; border: none; border-radius: 6px; padding: 12px 24px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 15px; font-weight: 600; letter-spacing: 0.3px; cursor: pointer; transition: transform 0.15s cubic-bezier(0.23, 1, 0.32, 1); } .ds-btn-primary-dark:active { transform: scale(0.97); }"
+    },
+    {
+      "name": "Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Default content container — flat, tonal surface with no shadow.",
+      "html": "<div class=\"ds-card\"><div class=\"ds-card-content\">Card content</div></div>",
+      "css": ".ds-card { background: #EEF3E9; border-radius: 10px; padding: 16px; border: none; box-shadow: none; font-family: 'Plus Jakarta Sans', sans-serif; overflow: hidden; } .ds-card-content { color: #141C12; font-size: 14px; line-height: 1.5; }"
+    },
+    {
+      "name": "Input / Text Field",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Filled text input with outline border. Used for settings, search, and text entry throughout the app.",
+      "html": "<div class=\"ds-input-container\"><label class=\"ds-input-label\">Label</label><input class=\"ds-input\" type=\"text\" placeholder=\"Placeholder\" /></div>",
+      "css": ".ds-input-container { display: flex; flex-direction: column; gap: 4px; font-family: 'Plus Jakarta Sans', sans-serif; } .ds-input-label { font-size: 14px; color: #3E4839; } .ds-input { background: #EEF3E9; border: 1px solid #BEC8B7; border-radius: 6px; padding: 12px 16px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; color: #141C12; outline: none; transition: border-color 0.15s ease; } .ds-input:focus { border-color: #064E3B; border-width: 1.5px; }"
+    },
+    {
+      "name": "Navigation Bar",
+      "kind": "nav",
+      "refersTo": "navigation-bar",
+      "description": "Bottom navigation bar with icon and label. Selected state uses Sacred Green with an indicator pill.",
+      "html": "<nav class=\"ds-nav\"><div class=\"ds-nav-item ds-nav-selected\"><svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#064E3B\" stroke-width=\"2\"><path d=\"M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z\"/></svg><span class=\"ds-nav-label\">Home</span></div><div class=\"ds-nav-item\"><svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#3E4839\" stroke-width=\"2\"><rect x=\"3\" y=\"3\" width=\"7\" height=\"7\"/><rect x=\"14\" y=\"3\" width=\"7\" height=\"7\"/><rect x=\"3\" y=\"14\" width=\"7\" height=\"7\"/><rect x=\"14\" y=\"14\" width=\"7\" height=\"7\"/></svg><span class=\"ds-nav-label\">Stats</span></div></nav>",
+      "css": ".ds-nav { display: flex; justify-content: space-around; align-items: center; background: #F7FAF4; padding: 8px 0; font-family: 'Plus Jakarta Sans', sans-serif; } .ds-nav-item { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 4px 16px; position: relative; cursor: pointer; } .ds-nav-selected::before { content: ''; position: absolute; top: -4px; width: 32px; height: 4px; background: #064E3B; border-radius: 6px; opacity: 0.12; } .ds-nav-label { font-size: 11px; font-weight: 500; letter-spacing: 0.3px; color: #3E4839; } .ds-nav-selected .ds-nav-label { color: #064E3B; font-weight: 700; }"
+    },
+    {
+      "name": "StatCard",
+      "kind": "custom",
+      "refersTo": "stat-card-metric",
+      "description": "Prayer statistic display — filled icon container, large value, description labels.",
+      "html": "<div class=\"ds-statcard\"><div class=\"ds-statcard-icon\" style=\"background: #064E3B;\"><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"white\" stroke=\"none\"><circle cx=\"12\" cy=\"12\" r=\"10\"/></svg></div><div class=\"ds-statcard-value\" style=\"color: #064E3B;\">42</div><div class=\"ds-statcard-sub\">This week</div><div class=\"ds-statcard-label\">Qadaa Prayers</div></div>",
+      "css": ".ds-statcard { background: #EEF3E9; border-radius: 10px; padding: 16px; display: flex; flex-direction: column; gap: 4px; font-family: 'Plus Jakarta Sans', sans-serif; } .ds-statcard-icon { width: 34px; height: 34px; border-radius: 6px; display: flex; align-items: center; justify-content: center; margin-bottom: 8px; } .ds-statcard-value { font-size: 26px; font-weight: 700; letter-spacing: -0.5px; line-height: 1; } .ds-statcard-sub { font-size: 12px; font-weight: 500; color: #3E4839; } .ds-statcard-label { font-size: 11px; font-weight: 400; color: #6F7A69; }"
+    },
+    {
+      "name": "ToggleTile",
+      "kind": "custom",
+      "refersTo": "toggle-tile-qadaa",
+      "description": "Qadaa prayer toggle — the signature devotional interaction. Check circle + prayer name + time in a card row.",
+      "html": "<div class=\"ds-toggletile\"><div class=\"ds-toggletile-circle ds-toggletile-filled\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"white\" stroke=\"none\"><polyline points=\"20 6 9 17 4 12\" stroke=\"white\" stroke-width=\"3\" fill=\"none\"/></svg></div><div class=\"ds-toggletile-name ds-toggletile-done\">Fajr</div><div class=\"ds-toggletile-time\">5:12 AM</div></div>",
+      "css": ".ds-toggletile { display: flex; align-items: center; gap: 16px; background: #EEF3E9; border-radius: 10px; padding: 12px 16px; font-family: 'Plus Jakarta Sans', sans-serif; cursor: pointer; } .ds-toggletile-circle { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: all 0.15s cubic-bezier(0.23, 1, 0.32, 1); } .ds-toggletile-empty { border: 2px solid #6F7A69; background: transparent; } .ds-toggletile-filled { border: 2px solid #064E3B; background: #064E3B; } .ds-toggletile-name { flex: 1; font-size: 15px; font-weight: 600; color: #141C12; } .ds-toggletile-done { color: #3E4839; text-decoration: line-through; } .ds-toggletile-time { font-size: 13px; font-weight: 500; color: #6F7A69; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Devotional Garden",
+    "overview": "The app feels like a quiet garden at dawn \u2014 calm, purposeful, rooted in tradition. Every interaction is a moment of stillness between the user and their practice. The deep green of Sacred Green anchors the system like mature foliage; warm off-white surfaces suggest natural light filtering through leaves. Nothing competes for attention \u2014 the interface recedes so the act of logging a prayer remains central.\n\nThis is a spiritual tool, not a product dashboard. The design rejects gamified mechanics (streaks-as-pressure, badges, leaderboards) as well as synthetic dark-neon-cyber aesthetics. Warmth, dignity, and devotional clarity govern every decision.",
+    "keyCharacteristics": [
+      "Tonal layering replaces shadows \u2014 depth comes from surface containers, not drop shadows",
+      "One typeface (Plus Jakarta Sans) across all weights \u2014 clean, readable, quietly elegant",
+      "Color is purposeful and restrained \u2014 Sacred Green occupies 30% or less of any screen; neutrals carry the remainder",
+      "Motion is minimal and purposeful \u2014 state changes and feedback only, no choreography",
+      "Sacred geometry expressed through clean rounded corners and balanced spacing, not decorative patterns"
+    ],
+    "rules": [
+      { "name": "The Garden Tone Rule", "body": "Every neutral carries a trace of green (chroma \u2248 0.005). Pure gray, cool blue-gray, and warm beige are all forbidden \u2014 the system's warmth comes from this consistent undertone.", "section": "colors" },
+      { "name": "The Rarity Rule", "body": "Sacred Green occupies 30% or less of any screen. Its infrequency gives it weight. Buttons, selected nav items, and small icon fills are its natural home; large background swaths are not.", "section": "colors" },
+      { "name": "The One Family Rule", "body": "No font switching. All hierarchy is expressed through weight (400 / 500 / 600 / 700) and size, not typeface changes.", "section": "typography" },
+      { "name": "The Flat-By-Default Rule", "body": "Surfaces are flat at rest. No shadows \u2014 depth is communicated through the tonal container stack.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do use Sacred Green on 30% or less of any screen. Its rarity is its power.",
+      "Do use the tonal container stack for elevation instead of shadows.",
+      "Do use Plus Jakarta Sans for all text \u2014 one family, all weights.",
+      "Do keep motion restrained \u2014 state changes and feedback only, no choreographed entrances.",
+      "Do ensure every neutral carries a green trace (the Garden Tone Rule).",
+      "Do use flat cards with container backgrounds rather than bordered or shadowed cards."
+    ],
+    "donts": [
+      "Don't use gamification patterns \u2014 no badges, achievements, leaderboards, or streaks-as-pressure. The app is devotional, not competitive.",
+      "Don't use dark mode with purple gradients, neon accents, or glassmorphism. Stay warm and natural.",
+      "Don't use bounce or elastic easing (easeOutBack, spring animations). Use the custom ease-out cubic bezier.",
+      "Don't use gradient text for any purpose. Solid color only.",
+      "Don't use side-stripe borders (border-left > 1px as accent). Use full borders, background fills, or nothing.",
+      "Don't use nested cards. Cards are the lazy answer.",
+      "Don't add decorative patterns, geometric overlays, or Islamic pattern motifs as background elements. The interface stays clean and undistracting.",
+      "Don't use em dashes in copy. Use commas, colons, semicolons, periods, or parentheses.",
+      "Don't use material dynamic color theming (ColorScheme.fromSeed). The palette is hand-tuned and intentional."
+    ]
+  }
+}

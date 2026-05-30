@@ -4,7 +4,7 @@ import '../../../../data/models/qadaa_log_model.dart';
 import '../../../../di/locator.dart';
 import '../../../../domain/models/prayer_name.dart';
 import '../../../../l10n/app_localizations.dart';
-import '../../../../services/qadaa_service.dart';
+import '../../../../data/services/qadaa_service.dart';
 import '../../../../theme/app_theme.dart';
 import 'qadaa_prayer_card.dart';
 

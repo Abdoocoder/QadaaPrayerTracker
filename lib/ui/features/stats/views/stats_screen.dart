@@ -3,6 +3,7 @@ import '../../../../di/locator.dart';
 import '../../../../theme/app_theme.dart';
 import '../../../../domain/models/prayer_name.dart';
 import '../../../core/widgets/stat_card.dart';
+import '../../../core/widgets/stagger_fade_in.dart';
 import '../view_models/stats_view_model.dart';
 import 'weekly_chart.dart';
 
@@ -50,10 +51,10 @@ class _StatsScreenState extends State<StatsScreen> {
           const Padding(padding: EdgeInsetsDirectional.only(start: AppTheme.spaceSm, end: AppTheme.spaceSm, top: AppTheme.spaceMd), child: Text('الإحصائيات', style: TextStyle(fontFamily: 'Plus Jakarta Sans', fontSize: 24, fontWeight: FontWeight.w700, color: AppTheme.onSurface, letterSpacing: -0.3), overflow: TextOverflow.ellipsis)),
           const SizedBox(height: AppTheme.spaceXl),
           Wrap(spacing: AppTheme.spaceMd, runSpacing: AppTheme.spaceMd, children: [
-            StatCard(label: 'هذا الأسبوع', value: '${agg['week_done']}', sub: 'صلاة مقضية', icon: Icons.date_range_rounded, color: AppTheme.primary),
-            StatCard(label: 'هذا الشهر', value: '${agg['month_done']}', sub: 'صلاة مقضية', icon: Icons.calendar_month_rounded, color: AppTheme.secondary),
-            StatCard(label: 'الإجمالي', value: '${agg['all_done']}', sub: 'صلاة مقضية', icon: Icons.assignment_turned_in_rounded, color: AppTheme.tertiary),
-            StatCard(label: 'معدل الإنجاز', value: _pct(agg['all_done'] ?? 0, agg['all_total'] ?? 0), sub: 'نسبة التقدم', icon: Icons.trending_up_rounded, color: AppTheme.primaryFixedDim),
+            StaggerFadeIn(index: 0, child: StatCard(label: 'هذا الأسبوع', value: '${agg['week_done']}', sub: 'صلاة مقضية', icon: Icons.date_range_rounded, color: AppTheme.primary)),
+            StaggerFadeIn(index: 1, child: StatCard(label: 'هذا الشهر', value: '${agg['month_done']}', sub: 'صلاة مقضية', icon: Icons.calendar_month_rounded, color: AppTheme.secondary)),
+            StaggerFadeIn(index: 2, child: StatCard(label: 'الإجمالي', value: '${agg['all_done']}', sub: 'صلاة مقضية', icon: Icons.assignment_turned_in_rounded, color: AppTheme.tertiary)),
+            StaggerFadeIn(index: 3, child: StatCard(label: 'معدل الإنجاز', value: _pct(agg['all_done'] ?? 0, agg['all_total'] ?? 0), sub: 'نسبة التقدم', icon: Icons.trending_up_rounded, color: AppTheme.primaryFixedDim)),
           ]),
           const SizedBox(height: AppTheme.spaceXxl),
           const Padding(padding: EdgeInsets.symmetric(horizontal: AppTheme.spaceSm), child: Text('توزيع الصلوات', style: TextStyle(fontFamily: 'Plus Jakarta Sans', fontSize: 17, fontWeight: FontWeight.w700, color: AppTheme.onSurface, letterSpacing: -0.2), overflow: TextOverflow.ellipsis)),
@@ -89,20 +90,23 @@ class _DistributionSection extends StatelessWidget {
             final done = dist[p.name] ?? 0;
             final ratio = maxVal > 0 ? done / maxVal : 0.0;
             final barColor = AppTheme.prayerColor(i);
-            return Padding(
-              padding: const EdgeInsets.only(bottom: AppTheme.spaceMd),
-              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                  Row(children: [
-                    Container(width: 8, height: 8, decoration: BoxDecoration(color: barColor, shape: BoxShape.circle)),
-                    const SizedBox(width: AppTheme.spaceSm),
-                    Text(p.arName, style: const TextStyle(fontFamily: 'Plus Jakarta Sans', fontSize: 13, fontWeight: FontWeight.w600, color: AppTheme.onSurface), overflow: TextOverflow.ellipsis),
+            return StaggerFadeIn(
+              index: i,
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: AppTheme.spaceMd),
+                child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                    Row(children: [
+                      Container(width: 8, height: 8, decoration: BoxDecoration(color: barColor, shape: BoxShape.circle)),
+                      const SizedBox(width: AppTheme.spaceSm),
+                      Text(p.arName, style: const TextStyle(fontFamily: 'Plus Jakarta Sans', fontSize: 13, fontWeight: FontWeight.w600, color: AppTheme.onSurface), overflow: TextOverflow.ellipsis),
+                    ]),
+                    Text('$done', style: const TextStyle(fontFamily: 'Plus Jakarta Sans', fontSize: 12, fontWeight: FontWeight.w500, color: AppTheme.onSurfaceVariant), overflow: TextOverflow.ellipsis),
                   ]),
-                  Text('$done', style: const TextStyle(fontFamily: 'Plus Jakarta Sans', fontSize: 12, fontWeight: FontWeight.w500, color: AppTheme.onSurfaceVariant), overflow: TextOverflow.ellipsis),
+                  const SizedBox(height: AppTheme.spaceXs),
+                  ClipRRect(borderRadius: BorderRadius.circular(3), child: LinearProgressIndicator(value: ratio, backgroundColor: AppTheme.surfaceContainerHigh, valueColor: AlwaysStoppedAnimation<Color>(barColor), minHeight: 6)),
                 ]),
-                const SizedBox(height: AppTheme.spaceXs),
-                ClipRRect(borderRadius: BorderRadius.circular(3), child: LinearProgressIndicator(value: ratio, backgroundColor: AppTheme.surfaceContainerHigh, valueColor: AlwaysStoppedAnimation<Color>(barColor), minHeight: 6)),
-              ]),
+              ),
             );
           }).toList(),
         ),

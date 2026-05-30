@@ -1,5 +1,5 @@
-import '../data/models/qadaa_log_model.dart';
-import '../domain/models/qadaa_progress.dart';
+import '../models/qadaa_log_model.dart';
+import '../../domain/models/qadaa_progress.dart';
 import 'database_service.dart';
 
 class QadaaService {

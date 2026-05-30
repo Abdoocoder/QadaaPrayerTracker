@@ -1,8 +1,8 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart' as p;
-import '../data/models/prayer_log_model.dart';
-import '../domain/models/prayer_name.dart';
-import '../domain/models/day_log.dart';
+import '../models/prayer_log_model.dart';
+import '../../domain/models/prayer_name.dart';
+import '../../domain/models/day_log.dart';
 
 class DatabaseService {
   final String dbName;

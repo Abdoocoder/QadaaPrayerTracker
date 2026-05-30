@@ -6,12 +6,12 @@ import 'package:qadaa_prayer_tracker/data/repositories/prayer_time_repository.da
 import 'package:qadaa_prayer_tracker/domain/models/day_log.dart';
 import 'package:qadaa_prayer_tracker/domain/models/prayer_name.dart';
 import 'package:qadaa_prayer_tracker/domain/models/prayer_times.dart';
-import 'package:qadaa_prayer_tracker/services/database_service.dart';
-import 'package:qadaa_prayer_tracker/services/notification_service.dart';
-import 'package:qadaa_prayer_tracker/services/prayer_time_service.dart';
-import 'package:qadaa_prayer_tracker/services/qadaa_service.dart';
-import 'package:qadaa_prayer_tracker/services/supabase_service.dart';
-import 'package:qadaa_prayer_tracker/services/supabase_sync_service.dart';
+import 'package:qadaa_prayer_tracker/data/services/database_service.dart';
+import 'package:qadaa_prayer_tracker/data/services/notification_service.dart';
+import 'package:qadaa_prayer_tracker/data/services/prayer_time_service.dart';
+import 'package:qadaa_prayer_tracker/data/services/qadaa_service.dart';
+import 'package:qadaa_prayer_tracker/data/services/supabase_service.dart';
+import 'package:qadaa_prayer_tracker/data/services/supabase_sync_service.dart';
 import 'package:qadaa_prayer_tracker/di/locale_notifier.dart';
 import 'package:qadaa_prayer_tracker/di/theme_notifier.dart';
 

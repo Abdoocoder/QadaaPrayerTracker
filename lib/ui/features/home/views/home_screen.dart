@@ -18,7 +18,12 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: AnimatedSwitcher(duration: AppTheme.durationBase, child: _pages[_tab]),
+      body: AnimatedSwitcher(
+        duration: AppTheme.durationFast,
+        switchInCurve: AppTheme.easeOutStrong,
+        switchOutCurve: AppTheme.easeOutStrong,
+        child: KeyedSubtree(key: ValueKey(_tab), child: _pages[_tab]),
+      ),
       bottomNavigationBar: NavigationBar(
         selectedIndex: _tab,
         onDestinationSelected: (i) => setState(() => _tab = i),

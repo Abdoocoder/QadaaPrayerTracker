@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import '../data/models/prayer_times_model.dart';
+import '../models/prayer_times_model.dart';
 import 'supabase_service.dart';
 
 class PrayerTimeService {

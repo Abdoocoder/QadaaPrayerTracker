@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
-import 'package:qadaa_prayer_tracker/services/database_service.dart';
-import 'package:qadaa_prayer_tracker/services/qadaa_service.dart';
+import 'package:qadaa_prayer_tracker/data/services/database_service.dart';
+import 'package:qadaa_prayer_tracker/data/services/qadaa_service.dart';
 
 void main() {
   setUpAll(() {

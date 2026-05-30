@@ -1,12 +1,12 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import '../../../../data/repositories/prayer_log_repository.dart';
-import '../../../../services/database_service.dart';
-import '../../../../services/notification_service.dart';
-import '../../../../services/prayer_time_service.dart';
-import '../../../../services/qadaa_service.dart';
-import '../../../../services/supabase_service.dart';
-import '../../../../services/supabase_sync_service.dart';
+import '../../../../data/services/database_service.dart';
+import '../../../../data/services/notification_service.dart';
+import '../../../../data/services/prayer_time_service.dart';
+import '../../../../data/services/qadaa_service.dart';
+import '../../../../data/services/supabase_service.dart';
+import '../../../../data/services/supabase_sync_service.dart';
 import '../../../../di/locale_notifier.dart';
 import '../../../../di/theme_notifier.dart';
 

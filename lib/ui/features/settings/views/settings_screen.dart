@@ -5,7 +5,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import '../../../../di/locator.dart';
 import '../../../../theme/app_theme.dart';
-import '../../../../services/prayer_time_service.dart';
+import '../../../../data/services/prayer_time_service.dart';
+import '../../../core/widgets/press_scale.dart';
 import '../../home/views/home_screen.dart';
 import '../view_models/settings_view_model.dart';
 
@@ -74,14 +75,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   title: vm.userEmail ?? '',
                   subtitle: 'مسجل الدخول',
                 ),
-                GestureDetector(
+                _SettingsNav(
+                  icon: Icons.logout_rounded,
+                  title: 'تسجيل الخروج',
+                  subtitle: 'تسجيل الخروج من حسابك',
+                  isDestructive: true,
                   onTap: () => _signOut(context),
-                  child: _SettingsNav(
-                    icon: Icons.logout_rounded,
-                    title: 'تسجيل الخروج',
-                    subtitle: 'تسجيل الخروج من حسابك',
-                    isDestructive: true,
-                  ),
                 ),
               ] else ...[
                 _SettingsNav(
@@ -139,14 +138,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 subtitle: 'احتفظ بنسخة من إحصائياتك',
                 onTap: () => _showExportDialog(context),
               ),
-              GestureDetector(
+              _SettingsNav(
+                icon: Icons.delete_sweep_rounded,
+                title: 'إعادة تعيين',
+                subtitle: 'مسح جميع البيانات والبدء من جديد',
+                isDestructive: true,
                 onTap: () => _resetData(context),
-                child: _SettingsNav(
-                  icon: Icons.delete_sweep_rounded,
-                  title: 'إعادة تعيين',
-                  subtitle: 'مسح جميع البيانات والبدء من جديد',
-                  isDestructive: true,
-                ),
               ),
               const SizedBox(height: AppTheme.spaceXl * 2),
               Center(
@@ -539,22 +536,25 @@ class _SettingsSwitchState extends State<_SettingsSwitch> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: AppTheme.spaceSm),
-      child: ListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: AppTheme.spaceLg, vertical: 2),
-        leading: Container(
-          width: 40, height: 40,
-          decoration: BoxDecoration(color: AppTheme.primary.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(AppTheme.radiusSm)),
-          child: Icon(widget.icon, color: AppTheme.primary, size: 20),
-        ),
-        title: Text(widget.title, style: const TextStyle(fontFamily: 'Plus Jakarta Sans', fontSize: 14, fontWeight: FontWeight.w600, color: AppTheme.onSurface), overflow: TextOverflow.ellipsis),
-        subtitle: Text(widget.subtitle, style: const TextStyle(fontFamily: 'Plus Jakarta Sans', fontSize: 12, fontWeight: FontWeight.w400, color: AppTheme.onSurfaceVariant), overflow: TextOverflow.ellipsis),
-        trailing: Switch(
-          value: _value,
-          activeTrackColor: AppTheme.primary.withValues(alpha: 0.5),
-          activeThumbColor: AppTheme.primary,
-          onChanged: (v) { setState(() => _value = v); widget.onChanged?.call(v); },
+    return PressScale(
+      onTap: widget.onChanged != null ? () => widget.onChanged!(!_value) : null,
+      child: Card(
+        margin: const EdgeInsets.only(bottom: AppTheme.spaceSm),
+        child: ListTile(
+          contentPadding: const EdgeInsets.symmetric(horizontal: AppTheme.spaceLg, vertical: 2),
+          leading: Container(
+            width: 40, height: 40,
+            decoration: BoxDecoration(color: AppTheme.primary.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(AppTheme.radiusSm)),
+            child: Icon(widget.icon, color: AppTheme.primary, size: 20),
+          ),
+          title: Text(widget.title, style: const TextStyle(fontFamily: 'Plus Jakarta Sans', fontSize: 14, fontWeight: FontWeight.w600, color: AppTheme.onSurface), overflow: TextOverflow.ellipsis),
+          subtitle: Text(widget.subtitle, style: const TextStyle(fontFamily: 'Plus Jakarta Sans', fontSize: 12, fontWeight: FontWeight.w400, color: AppTheme.onSurfaceVariant), overflow: TextOverflow.ellipsis),
+          trailing: Switch(
+            value: _value,
+            activeTrackColor: AppTheme.primary.withValues(alpha: 0.5),
+            activeThumbColor: AppTheme.primary,
+            onChanged: (v) { setState(() => _value = v); widget.onChanged?.call(v); },
+          ),
         ),
       ),
     );
@@ -610,22 +610,25 @@ class _SettingsNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: AppTheme.spaceSm),
-      child: ListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: AppTheme.spaceLg, vertical: 2),
-        leading: Container(
-          width: 40, height: 40,
-          decoration: BoxDecoration(
-            color: isDestructive ? AppTheme.error.withValues(alpha: 0.08) : AppTheme.primary.withValues(alpha: 0.08),
-            borderRadius: BorderRadius.circular(AppTheme.radiusSm),
+    return PressScale(
+      onTap: onTap,
+      child: Card(
+        margin: const EdgeInsets.only(bottom: AppTheme.spaceSm),
+        child: ListTile(
+          contentPadding: const EdgeInsets.symmetric(horizontal: AppTheme.spaceLg, vertical: 2),
+          leading: Container(
+            width: 40, height: 40,
+            decoration: BoxDecoration(
+              color: isDestructive ? AppTheme.error.withValues(alpha: 0.08) : AppTheme.primary.withValues(alpha: 0.08),
+              borderRadius: BorderRadius.circular(AppTheme.radiusSm),
+            ),
+            child: Icon(icon, color: isDestructive ? AppTheme.error : AppTheme.primary, size: 20),
           ),
-          child: Icon(icon, color: isDestructive ? AppTheme.error : AppTheme.primary, size: 20),
+          title: Text(title, style: TextStyle(fontFamily: 'Plus Jakarta Sans', fontSize: 14, fontWeight: FontWeight.w600, color: isDestructive ? AppTheme.error : AppTheme.onSurface), overflow: TextOverflow.ellipsis),
+          subtitle: Text(subtitle, style: const TextStyle(fontFamily: 'Plus Jakarta Sans', fontSize: 12, fontWeight: FontWeight.w400, color: AppTheme.onSurfaceVariant), overflow: TextOverflow.ellipsis),
+          trailing: Icon(Icons.chevron_left_rounded, color: AppTheme.outline.withValues(alpha: 0.5)),
+          onTap: onTap,
         ),
-        title: Text(title, style: TextStyle(fontFamily: 'Plus Jakarta Sans', fontSize: 14, fontWeight: FontWeight.w600, color: isDestructive ? AppTheme.error : AppTheme.onSurface), overflow: TextOverflow.ellipsis),
-        subtitle: Text(subtitle, style: const TextStyle(fontFamily: 'Plus Jakarta Sans', fontSize: 12, fontWeight: FontWeight.w400, color: AppTheme.onSurfaceVariant), overflow: TextOverflow.ellipsis),
-        trailing: Icon(Icons.chevron_left_rounded, color: AppTheme.outline.withValues(alpha: 0.5)),
-        onTap: onTap,
       ),
     );
   }

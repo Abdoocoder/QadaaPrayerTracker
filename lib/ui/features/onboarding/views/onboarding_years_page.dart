@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../../../di/locator.dart';
 import '../../../../l10n/app_localizations.dart';
-import '../../../../services/qadaa_service.dart';
+import '../../../../data/services/qadaa_service.dart';
 import '../../../../theme/app_theme.dart';
 import '../../home/views/home_screen.dart';
 

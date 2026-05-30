@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../theme/app_theme.dart';
+import '../../../core/widgets/press_scale.dart';
 
 class ToggleTile extends StatefulWidget {
   final String name;
@@ -23,7 +24,7 @@ class _ToggleTileState extends State<ToggleTile> with SingleTickerProviderStateM
     super.initState();
     _done = widget.completed;
     _animController = AnimationController(vsync: this, duration: AppTheme.durationFast);
-    _scale = CurvedAnimation(parent: _animController, curve: AppTheme.springOut);
+    _scale = CurvedAnimation(parent: _animController, curve: AppTheme.easeOutStrong);
     if (_done) _animController.value = 1;
   }
 
@@ -41,12 +42,14 @@ class _ToggleTileState extends State<ToggleTile> with SingleTickerProviderStateM
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: AppTheme.spaceMd),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(AppTheme.radiusMd),
-        onTap: widget.onToggle,
-        child: Padding(
+    return PressScale(
+      onTap: widget.onToggle,
+      child: Card(
+        margin: const EdgeInsets.only(bottom: AppTheme.spaceMd),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(AppTheme.radiusMd),
+          onTap: widget.onToggle,
+          child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: AppTheme.spaceLg, vertical: AppTheme.spaceMd),
           child: Row(
             children: [
@@ -71,6 +74,7 @@ class _ToggleTileState extends State<ToggleTile> with SingleTickerProviderStateM
             ],
           ),
         ),
+      ),
       ),
     );
   }

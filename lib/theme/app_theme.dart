@@ -45,6 +45,7 @@ class AppTheme {
   static const Color darkSurfaceContainerHighest = Color(0xFF34443A);
   static const Color darkOutline = Color(0xFF88947F);
   static const Color darkOutlineVariant = Color(0xFF3E4839);
+  static const Color darkPrimary = Color(0xFF80BEA6);
 
   static const Color chartFajr = Color(0xFFD4A843);
   static const Color chartDhuhr = Color(0xFF5B8C5A);
@@ -70,12 +71,14 @@ class AppTheme {
   static const double spaceXxxl = 48;
   static const double spaceXxxxl = 64;
 
-  static const Duration durationFast = Duration(milliseconds: 200);
-  static const Duration durationBase = Duration(milliseconds: 350);
-  static const Duration durationSlow = Duration(milliseconds: 600);
+  static const Duration durationFast = Duration(milliseconds: 150);
+  static const Duration durationBase = Duration(milliseconds: 250);
+  static const Duration durationSlow = Duration(milliseconds: 350);
 
   static const Curve springOut = Curves.easeOutBack;
-  static const Curve smoothEase = Curves.easeInOutCubic;
+  static const Curve easeOutStrong = Cubic(0.23, 1, 0.32, 1);
+  static const Curve easeInOutStrong = Cubic(0.77, 0, 0.175, 1);
+  static const double pressScale = 0.97;
 
   static const Color chartFajrDark = Color(0xFFE8C76A);
   static const Color chartDhuhrDark = Color(0xFF7EB07D);
@@ -274,7 +277,7 @@ class AppTheme {
               fontFamily: 'Plus Jakarta Sans',
               fontSize: 11,
               fontWeight: FontWeight.w700,
-              color: primary,
+              color: darkPrimary,
               letterSpacing: 0.3,
             );
           }
@@ -287,15 +290,15 @@ class AppTheme {
         }),
         iconTheme: WidgetStateProperty.resolveWith((states) {
           if (states.contains(WidgetState.selected)) {
-            return const IconThemeData(color: primary, size: 22);
+            return const IconThemeData(color: darkPrimary, size: 22);
           }
           return const IconThemeData(color: darkOnSurfaceVariant, size: 22);
         }),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          backgroundColor: primary,
-          foregroundColor: onPrimary,
+          backgroundColor: darkPrimary,
+          foregroundColor: Color(0xFF0F1A14),
           elevation: 0,
           padding: const EdgeInsets.symmetric(
             horizontal: spaceXl,
@@ -314,7 +317,7 @@ class AppTheme {
       ),
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
-          foregroundColor: primary,
+          foregroundColor: darkPrimary,
           textStyle: const TextStyle(
             fontFamily: 'Plus Jakarta Sans',
             fontSize: 13,
@@ -338,7 +341,7 @@ class AppTheme {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(radiusSm),
-          borderSide: const BorderSide(color: primary, width: 1.5),
+          borderSide: const BorderSide(color: darkPrimary, width: 1.5),
         ),
         labelStyle: const TextStyle(
           fontFamily: 'Plus Jakarta Sans',

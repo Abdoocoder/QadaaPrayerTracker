@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../theme/app_theme.dart';
+import '../../../core/widgets/stagger_fade_in.dart';
 
 class ContentScreen extends StatelessWidget {
   const ContentScreen({super.key});
@@ -44,37 +45,37 @@ class ContentScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: AppTheme.spaceXl),
-            _ContentCard(
+            StaggerFadeIn(index: 0, child: _ContentCard(
               tag: 'أدعية',
               title: 'دعاء قضاء الصلاة الفائتة',
               body:
                   'اللهم إني أسألك بعظمتك أن تغفر لي تقصيري في صلواتي، '
                   'وتقبل مني قضائها، واجعلها خالصة لوجهك الكريم.',
-            ),
+            )),
             const SizedBox(height: AppTheme.spaceMd),
-            _ContentCard(
+            StaggerFadeIn(index: 1, child: _ContentCard(
               tag: 'آيات وأحاديث',
               title: 'فضل المحافظة على الصلوات',
               body:
                   'قال الله تعالى: "إِنَّ الصَّلَاةَ كَانَتْ عَلَى الْمُؤْمِنِينَ كِتَابًا مَّوْقُوتًا" '
                   '(النساء: ١٠٣). وحث النبي ﷺ على تعجيل قضاء الفوائت.',
-            ),
+            )),
             const SizedBox(height: AppTheme.spaceMd),
-            _ContentCard(
+            StaggerFadeIn(index: 2, child: _ContentCard(
               tag: 'نصائح',
               title: 'كيف تبدأ في قضاء صلواتك',
               body:
                   'ابدأ بالصلوات الخمس الحاضرة أولاً، ثم أضف صلاة واحدة '
                   'مقضية مع كل صلاة. تدريجياً ستلاحظ الفرق.',
-            ),
+            )),
             const SizedBox(height: AppTheme.spaceMd),
-            _ContentCard(
+            StaggerFadeIn(index: 3, child: _ContentCard(
               tag: 'أذكار',
               title: 'أذكار الصباح والمساء',
               body:
                   'اللهم بك أصبحنا وبك أمسينا، وبك نحيا وبك نموت وإليك المصير. '
                   'اللهم أنت ربي لا إله إلا أنت خلقتني وأنا عبدك.',
-            ),
+            )),
             const SizedBox(height: AppTheme.spaceXl),
           ],
         ),

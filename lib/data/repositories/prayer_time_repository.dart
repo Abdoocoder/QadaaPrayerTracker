@@ -1,6 +1,6 @@
 import 'package:sqflite/sqflite.dart';
-import '../../services/database_service.dart';
-import '../../services/prayer_time_service.dart';
+import '../services/database_service.dart';
+import '../services/prayer_time_service.dart';
 import '../models/prayer_log_model.dart';
 import '../models/prayer_times_model.dart';
 import '../../domain/models/prayer_times.dart';

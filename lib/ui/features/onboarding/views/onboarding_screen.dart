@@ -42,7 +42,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
     super.initState();
     _pageController = PageController();
     _animController = AnimationController(vsync: this, duration: AppTheme.durationSlow);
-    _fadeIn = CurvedAnimation(parent: _animController, curve: AppTheme.smoothEase);
+    _fadeIn = CurvedAnimation(parent: _animController, curve: AppTheme.easeOutStrong);
     _animController.forward();
   }
 
@@ -127,7 +127,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
               child: SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: _currentPage == _pages.length - 1 ? _goToHome : () => _pageController.nextPage(duration: AppTheme.durationBase, curve: AppTheme.smoothEase),
+                  onPressed: _currentPage == _pages.length - 1 ? _goToHome : () => _pageController.nextPage(duration: AppTheme.durationBase, curve: AppTheme.easeInOutStrong),
                   child: Text(_currentPage == _pages.length - 1 ? 'ابدأ الآن' : 'التالي'),
                 ),
               ),
