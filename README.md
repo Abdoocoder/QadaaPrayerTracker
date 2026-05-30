@@ -12,7 +12,7 @@
   </p>
   <p align="center">
     <code>flutter analyze</code> — 0 issues &nbsp;&nbsp;·&nbsp;&nbsp;
-    <code>flutter test</code> — 163/163 passing
+    <code>flutter test</code> — 189/189 passing
   </p>
 </div>
 
@@ -47,6 +47,7 @@ Qadaa Prayer Tracker helps Muslims track, manage, and make up missed prayers (ص
 
 - Flutter SDK ^3.11.5
 - Dart SDK ^3.11.5
+- Supabase project (for cloud sync & prayer time edge function)
 
 ### Installation
 
@@ -59,6 +60,16 @@ cd QadaaPrayerTracker
 
 # Install dependencies
 flutter pub get
+
+# Set up Supabase (optional — local mode works without it)
+cp .env.example .env   # Add your Supabase project URL and anon key
+supabase start         # Or use an existing project
+
+# Apply database migrations
+supabase db push
+
+# Deploy the prayer times edge function
+supabase functions deploy fetch-prayer-times
 
 # Run the app
 flutter run
@@ -93,10 +104,12 @@ lib/
 │   └── repositories/         # Repository implementations
 ├── domain/                   # Domain layer
 │   └── models/               # Pure domain models (PrayerName, DayLog, PrayerTimes)
-├── services/                 # Services (database, API, notifications)
+├── services/                 # Services (database, API, notifications, sync)
 │   ├── database_service.dart # SQLite database
-│   ├── prayer_time_service.dart # Aladhan.com API client
-│   └── notification_service.dart # Local push notifications
+│   ├── prayer_time_service.dart # Aladhan.com API client → Supabase edge function
+│   ├── notification_service.dart # Local push notifications
+│   ├── supabase_service.dart # Supabase client (auth, REST, edge functions)
+│   └── supabase_sync_service.dart # Cloud sync (upload/download prayer logs & settings)
 ├── theme/                    # App theme (colors, spacing, typography)
 ├── l10n/                     # Localization (AR/EN)
 └── ui/
@@ -129,14 +142,17 @@ test/
 │   └── onboarding_test.dart
 ├── widgets/                  # Generic widget tests
 ├── helpers/
-│   └── mocks.dart            # Shared mock implementations
+│   ├── mocks.dart            # Shared mock implementations (incl. MockSupabaseService)
+│   └── test_setup.dart       # testSetupDi() helper
+├── services/
+│   └── supabase_sync_service_test.dart # Cloud sync tests (11)
 └── widget_test.dart
 ```
 
 ### Data Flow
 
 ```
-UI (View) → ViewModel (ChangeNotifier) → Repository → Service (DB / API)
+UI (View) → ViewModel (ChangeNotifier) → Repository → Service (DB / API / Edge Function)
                 ↕
           Domain Models
 ```
@@ -144,7 +160,8 @@ UI (View) → ViewModel (ChangeNotifier) → Repository → Service (DB / API)
 - **Views** observe ViewModels via `ListenableBuilder`
 - **ViewModels** expose immutable state and call repository methods
 - **Repositories** transform data models to domain models
-- **Services** handle raw I/O (SQLite, HTTP, notifications)
+- **Services** handle raw I/O (SQLite, HTTP, Supabase)
+- **Cloud Sync** — `SupabaseSyncService` synchronizes local SQLite data with Supabase when signed in, using a progress stream for UI updates
 
 ### State Management
 
@@ -152,7 +169,7 @@ Each ViewModel extends `ChangeNotifier` and is registered as a factory in GetIt.
 
 ## Testing
 
-The project maintains **163 passing tests** with **0 analysis issues**.
+The project maintains **189 passing tests** with **0 analysis issues**.
 
 ```bash
 # Run all tests
@@ -190,14 +207,48 @@ flutter analyze
 | `widgets/core_widgets_test.dart` | 14 | `StatCard`, `SectionHeader`, `GreetingHeader`, `ToggleTile`, `DateStrip` |
 | `widgets/data_display_test.dart` | 11 | `HeroStatsCard`, `WeeklyChart`, `ReminderList` |
 | `widgets/content_screen_test.dart` | 3 | Title, cards, content presence |
+| `services/supabase_sync_service_test.dart` | 11 | Sync, upload, download, concurrency, progress stream, error handling |
+
+### Environment
+
+- Supabase credentials are loaded from `.env` (see `.env.example` for the template)
+- The app runs in **local-only mode** if Supabase is not configured — no crash on missing credentials
+- **Test isolation** — `DatabaseService` accepts a `dbName` parameter (`'qadaa.db'` default) to avoid file-system conflicts during parallel test execution
+- **`testSetupDi()`** — a single helper in `test/helpers/test_setup.dart` that wraps `SharedPreferences.setMockInitialValues({})` + `setupDi()`, keeping test setup DRY
 
 ### Testing Approach
 
 - **Unit tests** for domain models and ViewModels with manual mock classes (no mockito dependency)
 - **Widget tests** for screens and components using `testWidgets` and `pump`
-- **Shared mocks** in `test/helpers/mocks.dart` provide reusable `MockLogRepo`, `MockTimeRepo`, `MockDatabaseService`, `MockNotificationService`, `MockPrayerTimeService`, and `MockLocaleNotifier` with failure flags and callbacks
+- **Shared mocks** in `test/helpers/mocks.dart` provide reusable `MockLogRepo`, `MockTimeRepo`, `MockDatabaseService`, `MockNotificationService`, `MockSupabaseService`, `MockPrayerTimeService`, and `MockLocaleNotifier` with failure flags and callbacks
 - **Idempotent DI** — `setupDi()` checks `isRegistered` before registering, allowing safe re-entry across test files
 - **`sl.allowReassignment = true`** in `setUp` to override ViewModel factory registrations with mock instances
+
+## Backend (Supabase)
+
+The app uses **Supabase** for cloud sync, authentication, and the prayer times edge function.
+
+### Schema: `qadaa`
+
+| Table | Purpose | RLS |
+|-------|---------|-----|
+| `prayer_logs` | User prayer completion records (user-owned) | `SELECT`/`INSERT`/`UPDATE`/`DELETE` own |
+| `prayer_times` | Cached Aladhan.com prayer times (global read) | `SELECT` all, insert via service role |
+| `settings` | Key-value user preferences synced to cloud (user-owned) | `SELECT`/`INSERT`/`UPDATE`/`DELETE` own |
+
+### Edge Function: `fetch-prayer-times`
+
+Located at `supabase/functions/fetch-prayer-times/`.
+
+- **Cache-first** — checks `qadaa.prayer_times` via an RPC function before calling Aladhan.com
+- **Cache miss** — fetches from `https://api.aladhan.com/v1/timings`, inserts result into `qadaa.prayer_times`
+- **JWT-gated** — requires a valid Supabase auth token
+- **Parameters** — `date`, `lat`, `lng`, `method` (query params)
+- Uses raw REST API with `Accept-Profile`/`Content-Profile` headers for `qadaa` schema access
+
+### Migrations
+
+All database migrations live in `supabase/migrations/20260529_create_qadaa_schema_and_tables.sql`.
 
 ## Tech Stack
 
@@ -206,6 +257,7 @@ flutter analyze
 | Package | Purpose |
 |---------|---------|
 | `sqflite` | Local SQLite database |
+| `supabase_flutter` | Supabase client (auth, REST API, edge functions) |
 | `http` | Prayer times API (Aladhan.com) |
 | `flutter_local_notifications` | Local push notifications |
 | `timezone` | Timezone-aware notification scheduling |
@@ -231,8 +283,9 @@ Switch between Arabic and English in Settings. The app defaults to Arabic with R
 Contributions are welcome. Please open an issue first to discuss what you'd like to change.
 
 1. Ensure `flutter analyze` passes with 0 issues
-2. Ensure `flutter test` passes (all 163+ tests)
+2. Ensure `flutter test` passes (all 189+ tests)
 3. Update tests for any new features or changes
+4. For backend changes, update the migration and re-deploy the edge function
 
 ## License
 
