@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:qadaa_prayer_tracker/app.dart';
-import 'package:qadaa_prayer_tracker/di/locator.dart';
+import '../helpers/test_setup.dart';
 
 void main() {
   setUpAll(() async {
-    await setupDi();
+    await testSetupDi();
   });
 
   group('OnboardingScreen', () {

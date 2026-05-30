@@ -2,14 +2,19 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../data/models/prayer_times_model.dart';
+import 'supabase_service.dart';
 
 class PrayerTimeService {
   static const _baseUrl = 'https://api.aladhan.com/v1/timingsByCity';
   static const _timeout = Duration(seconds: 15);
 
+  final SupabaseService? _supabase;
+
   String city = 'Amman';
   String country = 'Jordan';
   int method = 3;
+
+  PrayerTimeService({SupabaseService? supabase}) : _supabase = supabase;
 
   static const calculationMethods = {
     0: 'Shia Ithna Ashari',
@@ -35,6 +40,28 @@ class PrayerTimeService {
   Future<PrayerTimesModel> fetchTimes(DateTime date) async {
     final dateStr =
         '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
+
+    if (_supabase != null) {
+      try {
+        final result = await _supabase.fetchPrayerTimes(
+          date: dateStr,
+          method: method.toString(),
+        );
+        if (result != null) {
+          return PrayerTimesModel(
+            date: dateStr,
+            fajr: result['fajr'] as String,
+            sunrise: result['sunrise'] as String,
+            dhuhr: result['dhuhr'] as String,
+            asr: result['asr'] as String,
+            maghrib: result['maghrib'] as String,
+            isha: result['isha'] as String,
+            timezone: (result['timezone'] as String?) ?? 'Asia/Amman',
+          );
+        }
+      } catch (_) {}
+    }
+
     final url = '$_baseUrl/$dateStr?city=$city&country=$country&method=$method';
 
     try {

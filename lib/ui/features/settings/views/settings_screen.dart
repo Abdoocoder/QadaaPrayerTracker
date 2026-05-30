@@ -259,9 +259,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
       final file = File('${dir.path}/prayer_logs.$format');
       await file.writeAsString(content);
       if (!context.mounted) return;
-      await Share.shareXFiles(
-        [XFile(file.path)],
-        text: 'Qadaa Prayer Tracker - بيانات الصلوات',
+      await SharePlus.instance.share(
+        ShareParams(
+          files: [XFile(file.path)],
+          text: 'Qadaa Prayer Tracker - بيانات الصلوات',
+        ),
       );
     } catch (e) {
       messenger.showSnackBar(

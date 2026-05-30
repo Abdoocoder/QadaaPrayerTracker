@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:qadaa_prayer_tracker/di/locator.dart';
 import 'package:qadaa_prayer_tracker/domain/models/prayer_name.dart';
+import '../helpers/test_setup.dart';
 import 'package:qadaa_prayer_tracker/domain/models/day_log.dart';
 import 'package:qadaa_prayer_tracker/ui/features/home/views/hero_stats_card.dart';
 import 'package:qadaa_prayer_tracker/ui/features/home/views/reminder_list.dart';
@@ -84,9 +84,14 @@ void main() {
       await tester.pumpWidget(wrapApp(ReminderList(today: _todayOneDone)));
       expect(find.text('صلاة الظهر'), findsOneWidget);
     });
+  });
+
+  group('ReminderList (with navigation)', () {
+    setUpAll(() async {
+      await testSetupDi();
+    });
 
     testWidgets('قضاء button navigates to manage screen', (tester) async {
-      await setupDi();
       await tester.pumpWidget(wrapApp(ReminderList(today: _dayLog)));
       await tester.tap(find.text('قضاء').first);
       await tester.pumpAndSettle();

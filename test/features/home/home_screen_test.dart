@@ -4,12 +4,13 @@ import 'package:qadaa_prayer_tracker/di/locator.dart';
 import 'package:qadaa_prayer_tracker/ui/features/home/view_models/home_view_model.dart';
 import 'package:qadaa_prayer_tracker/ui/features/home/views/home_screen.dart';
 import '../../helpers/mocks.dart';
+import '../../helpers/test_setup.dart';
 
 Widget wrapApp(Widget w) => MaterialApp(home: w);
 
 void main() {
   setUpAll(() async {
-    await setupDi();
+    await testSetupDi();
   });
 
   setUp(() {

@@ -1,0 +1,8 @@
+{
+  "imports": {
+    "@supabase/functions-js": "jsr:@supabase/functions-js@^2.4.0"
+  },
+  "tasks": {
+    "serve": "deno serve --allow-net --allow-env index.ts"
+  }
+}

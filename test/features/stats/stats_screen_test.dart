@@ -5,12 +5,13 @@ import 'package:qadaa_prayer_tracker/domain/models/prayer_name.dart';
 import 'package:qadaa_prayer_tracker/ui/features/stats/view_models/stats_view_model.dart';
 import 'package:qadaa_prayer_tracker/ui/features/stats/views/stats_screen.dart';
 import '../../helpers/mocks.dart';
+import '../../helpers/test_setup.dart';
 
 Widget wrapApp(Widget w) => MaterialApp(home: Scaffold(body: w));
 
 void main() {
   setUpAll(() async {
-    await setupDi();
+    await testSetupDi();
   });
 
   setUp(() {
