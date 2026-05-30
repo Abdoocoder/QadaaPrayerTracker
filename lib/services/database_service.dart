@@ -5,7 +5,10 @@ import '../domain/models/prayer_name.dart';
 import '../domain/models/day_log.dart';
 
 class DatabaseService {
+  final String dbName;
   Database? _db;
+
+  DatabaseService({this.dbName = 'qadaa.db'});
 
   Future<Database> get database async {
     if (_db != null) return _db!;
@@ -15,7 +18,7 @@ class DatabaseService {
 
   Future<Database> _init() async {
     final dbPath = await getDatabasesPath();
-    final path = p.join(dbPath, 'qadaa.db');
+    final path = p.join(dbPath, dbName);
     return openDatabase(
       path,
       version: 3,

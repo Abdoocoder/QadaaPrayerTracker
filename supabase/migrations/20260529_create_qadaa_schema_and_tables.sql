@@ -86,8 +86,10 @@ ALTER TABLE qadaa.prayer_times ENABLE ROW LEVEL SECURITY;
 CREATE POLICY prayer_times_select_all ON qadaa.prayer_times
   FOR SELECT USING (true);
 
-GRANT USAGE ON SCHEMA qadaa TO anon, authenticated;
+GRANT USAGE ON SCHEMA qadaa TO anon, authenticated, service_role;
 GRANT ALL ON ALL TABLES IN SCHEMA qadaa TO authenticated;
+GRANT ALL ON ALL TABLES IN SCHEMA qadaa TO service_role;
+GRANT ALL ON ALL SEQUENCES IN SCHEMA qadaa TO service_role;
 GRANT SELECT ON qadaa.prayer_times TO anon;
 GRANT SELECT ON qadaa.prayer_logs TO anon;
 GRANT EXECUTE ON FUNCTION qadaa.get_prayer_times_cached TO anon, authenticated, service_role;

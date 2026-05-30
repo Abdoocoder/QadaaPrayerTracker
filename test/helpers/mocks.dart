@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:qadaa_prayer_tracker/data/models/prayer_times_model.dart';
 import 'package:qadaa_prayer_tracker/data/repositories/prayer_log_repository.dart';
 import 'package:qadaa_prayer_tracker/data/repositories/prayer_time_repository.dart';
@@ -8,6 +9,7 @@ import 'package:qadaa_prayer_tracker/domain/models/prayer_times.dart';
 import 'package:qadaa_prayer_tracker/services/database_service.dart';
 import 'package:qadaa_prayer_tracker/services/notification_service.dart';
 import 'package:qadaa_prayer_tracker/services/prayer_time_service.dart';
+import 'package:qadaa_prayer_tracker/services/supabase_service.dart';
 import 'package:qadaa_prayer_tracker/di/locale_notifier.dart';
 import 'package:qadaa_prayer_tracker/di/theme_notifier.dart';
 
@@ -119,6 +121,83 @@ class MockNotificationService extends NotificationService {
   Future<void> cancelAll() async {
     didCancelAll = true;
   }
+}
+
+class MockSupabaseService implements SupabaseService {
+  bool _signedIn = true;
+  bool failOnUpsertPrayerLog = false;
+  bool failOnGetPrayerLogs = false;
+  bool failOnUpsertSetting = false;
+
+  final upsertedLogs = <Map<String, dynamic>>[];
+  final upsertedSettings = <String, String>{};
+  List<Map<String, dynamic>> cloudLogs = [];
+
+  @override
+  bool get isSignedIn => _signedIn;
+  void setSignedIn(bool v) => _signedIn = v;
+
+  @override
+  String? get userId => _signedIn ? 'test-user-id' : null;
+
+  @override
+  String? get userEmail => _signedIn ? 'test@example.com' : null;
+
+  @override
+  GoTrueClient get auth => throw UnimplementedError('auth not mocked');
+
+  @override
+  SupabaseClient get client => throw UnimplementedError('client not mocked');
+
+  @override
+  Future<void> init() async {}
+
+  @override
+  Future<AuthResponse> signUp(String email, String password) async =>
+      throw UnimplementedError('signUp not mocked');
+
+  @override
+  Future<AuthResponse> signIn(String email, String password) async =>
+      throw UnimplementedError('signIn not mocked');
+
+  @override
+  Future<AuthResponse> signInAnonymously() async =>
+      throw UnimplementedError('signInAnonymously not mocked');
+
+  @override
+  Future<void> signOut() async {}
+
+  @override
+  Future<Map<String, dynamic>?> fetchPrayerTimes({
+    required String date, String? lat, String? lng, String? method,
+  }) async => null;
+
+  @override
+  Future<void> upsertPrayerLog({
+    required String date,
+    required String prayerName,
+    required bool completed,
+  }) async {
+    if (failOnUpsertPrayerLog) throw Exception('mock upsert failure');
+    upsertedLogs.add({'date': date, 'prayer_name': prayerName, 'completed': completed});
+  }
+
+  @override
+  Future<List<Map<String, dynamic>>> getPrayerLogs({
+    DateTime? from, DateTime? to, int? limit,
+  }) async {
+    if (failOnGetPrayerLogs) throw Exception('mock fetch failure');
+    return cloudLogs;
+  }
+
+  @override
+  Future<void> upsertSetting(String key, String value) async {
+    if (failOnUpsertSetting) throw Exception('mock setting failure');
+    upsertedSettings[key] = value;
+  }
+
+  @override
+  Future<String?> getSetting(String key) async => null;
 }
 
 class MockPrayerTimeService extends PrayerTimeService {

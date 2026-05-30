@@ -16,6 +16,16 @@ function clean(raw: string): string {
   return space > 0 ? raw.substring(0, space) : raw
 }
 
+function schemaHeaders(key: string, schema: string): Record<string, string> {
+  return {
+    "Content-Type": "application/json",
+    apikey: key,
+    Authorization: `Bearer ${key}`,
+    "Accept-Profile": schema,
+    "Content-Profile": schema,
+  }
+}
+
 Deno.serve(async (req: Request) => {
   const url = new URL(req.url)
   const date = url.searchParams.get("date") ?? new Date().toISOString().split("T")[0]
@@ -26,25 +36,19 @@ Deno.serve(async (req: Request) => {
   const supabaseUrl = Deno.env.get("SUPABASE_URL")!
   const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
 
-  const headers = {
-    "Content-Type": "application/json",
-    apikey: supabaseKey,
-    Authorization: `Bearer ${supabaseKey}`,
-  }
-
   const cacheRes = await fetch(
-    `${supabaseUrl}/rest/v1/rpc/qadaa.get_prayer_times_cached`,
+    `${supabaseUrl}/rest/v1/rpc/get_prayer_times_cached`,
     {
       method: "POST",
-      headers,
+      headers: schemaHeaders(supabaseKey, "qadaa"),
       body: JSON.stringify({ p_date: date }),
     },
   )
 
   if (cacheRes.ok) {
-    const cached: PrayerTimesRow | null = await cacheRes.json()
-    if (cached) {
-      return new Response(JSON.stringify(cached), {
+    const cached: PrayerTimesRow[] = await cacheRes.json()
+    if (Array.isArray(cached) && cached.length > 0) {
+      return new Response(JSON.stringify(cached[0]), {
         headers: { "Content-Type": "application/json" },
       })
     }
@@ -76,11 +80,14 @@ Deno.serve(async (req: Request) => {
     timezone: (meta["timezone"] as string) ?? "Asia/Amman",
   }
 
-  await fetch(`${supabaseUrl}/rest/v1/qadaa/prayer_times`, {
+  const insertRes = await fetch(`${supabaseUrl}/rest/v1/prayer_times`, {
     method: "POST",
-    headers,
+    headers: schemaHeaders(supabaseKey, "qadaa"),
     body: JSON.stringify(row),
-  }).catch(() => {})
+  })
+  if (!insertRes.ok) {
+    console.error("Cache insert failed:", await insertRes.text())
+  }
 
   return new Response(JSON.stringify(row), {
     headers: { "Content-Type": "application/json" },
